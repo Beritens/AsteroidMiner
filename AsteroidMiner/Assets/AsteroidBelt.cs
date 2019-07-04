@@ -25,7 +25,7 @@ public class AsteroidBelt : MonoBehaviour
     public struct Object
     {
         public Object(Vector2 pos, int ty, float rot, float si,bool ast){
-            position = new float[2] {pos.x,pos.y};
+            position = new float[2]{pos.x,pos.y};
             type = ty;
             rotation = rot;
             size = si;
@@ -48,6 +48,7 @@ public class AsteroidBelt : MonoBehaviour
     public void load(SaveData.Objekte[] sects){
         foreach(SaveData.Objekte objs in sects){
             sectors.Add(new Vector2Int(objs.key[0],objs.key[1]),new List<Object>(objs.objs));
+            sectorsToSave.Add(new Vector2Int(objs.key[0],objs.key[1]));
         }
     }
     // Update is called once per frame
@@ -86,9 +87,6 @@ public class AsteroidBelt : MonoBehaviour
         }
 
         previousPlayerSector = playerSector;
-    }
-    void LoadRegion(){
-
     }
     //List<Vector2> currentlyConstructingLOL = new List<Vector2>(); //falls Sector geladen wird während anderer Thread ihn gerade generiert
     void loadSector(Vector2Int pos){

@@ -8,6 +8,7 @@ public class pickaxe : MonoBehaviour
     AsteroidBelt belt;
     select select;
     public Color selectColor;
+    public float strenth =10f;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +27,7 @@ public class pickaxe : MonoBehaviour
             if(Input.GetButtonDown("Fire1")){
                 asteroid ast = obj.GetComponent<asteroid>();
                 if(ast != null){
-                    ast.damage(10);
+                    ast.damage(strenth);
                 }
             }
             

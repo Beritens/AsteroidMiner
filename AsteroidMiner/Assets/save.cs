@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 public class save : MonoBehaviour
 {
     public string saveName;
     public AsteroidBelt asteroidBelt;
     public static save Instance;
+    SaveData data;
     
     void Awake()
     {
@@ -15,16 +17,25 @@ public class save : MonoBehaviour
             loadWorld();
         }
     }
+    Thread t;
     void saveWorld(){
-        SaveData.Objekte[] sectorArr = new SaveData.Objekte[asteroidBelt.sectorsToSave.Count];
-        for(int i = 0; i< sectorArr.Length; i++){
-            sectorArr[i] = new SaveData.Objekte(asteroidBelt.sectors[asteroidBelt.sectorsToSave[i]],asteroidBelt.sectorsToSave[i]);
+        string path = Application.persistentDataPath+"/" + saveName +".lol";
+        if(t!= null && t.ThreadState == ThreadState.Running){
+            t.Abort();
         }
-        SaveData save = new SaveData(sectorArr);
-        SaveSystem.SaveWorld(save,saveName);
+        t = new Thread(() =>{
+            SaveData.Objekte[] sectorArr = new SaveData.Objekte[asteroidBelt.sectorsToSave.Count];
+            for(int i = 0; i< sectorArr.Length; i++){
+                sectorArr[i] = new SaveData.Objekte(asteroidBelt.sectors[asteroidBelt.sectorsToSave[i]],asteroidBelt.sectorsToSave[i]);
+            }
+            SaveData save = new SaveData(sectorArr);
+            SaveSystem.SaveWorld(save,path);
+            Debug.Log("saved");});
+        t.Start();
+        
     }
     void loadWorld(){
-        SaveData data = SaveSystem.loadWorld(saveName);
+        data = SaveSystem.loadWorld(saveName);
         if(data != null){
             asteroidBelt.load(data.sectors);
         }
@@ -32,7 +43,7 @@ public class save : MonoBehaviour
     }
     void Update()
     {
-        if(Input.GetKey(KeyCode.J)){
+        if(Input.GetKeyDown(KeyCode.J)){
             saveWorld();
         }
     }
