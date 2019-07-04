@@ -10,14 +10,8 @@ public class look : MonoBehaviour
     float defaultHeadRotation;
     Camera cam;
     public Vector2 headLimit;
-    public follow foregroundIk;
-    public follow backgroundIK;
-    public Transform leftIK;
-    public Transform rightIK;
-    public follow foregroundIkArm;
-    public follow backgroundIKArm;
-    public Transform leftIKArm;
-    public Transform rightIKArm;
+    public rigging rig;
+ 
     // Start is called before the first frame update
     void Start()
     {
@@ -36,18 +30,14 @@ public class look : MonoBehaviour
         
         if(transform.InverseTransformPoint(mousepos).x <0 && right){
             right = false;
-            foregroundIk.target = rightIK;
-            backgroundIK.target = leftIK;
-            foregroundIkArm.target = rightIKArm;
-            backgroundIKArm.target = leftIKArm;
+            rig.left();
+            
             guy.localScale = new Vector3(guy.localScale.x *-1, guy.localScale.y, guy.localScale.z);
         }
         else if(transform.InverseTransformPoint(mousepos).x >0 && !right){
             right = true;
-            foregroundIk.target = leftIK;
-            backgroundIK.target = rightIK;
-            foregroundIkArm.target = leftIKArm;
-            backgroundIKArm.target = rightIKArm;
+            rig.right();
+            
             guy.localScale = new Vector3(guy.localScale.x *-1, guy.localScale.y, guy.localScale.z);
         }
         // if(right){
