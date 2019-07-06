@@ -11,14 +11,18 @@ public class look : MonoBehaviour
     Camera cam;
     public Vector2 headLimit;
     public rigging rig;
+    public pickaxe pic;
+    public delegate void OnSwitchSideHandler(bool right);
+    public event OnSwitchSideHandler OnSwitchSide;
  
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
         defaultHeadRotation = head.transform.eulerAngles.z;
+        
     }
-    bool right = true;
+    public bool right = true;
 
     // Update is called once per frame
     void Update()
@@ -30,13 +34,13 @@ public class look : MonoBehaviour
         
         if(transform.InverseTransformPoint(mousepos).x <0 && right){
             right = false;
-            rig.left();
+            tellLeft();
             
             guy.localScale = new Vector3(guy.localScale.x *-1, guy.localScale.y, guy.localScale.z);
         }
         else if(transform.InverseTransformPoint(mousepos).x >0 && !right){
             right = true;
-            rig.right();
+            tellRight();
             
             guy.localScale = new Vector3(guy.localScale.x *-1, guy.localScale.y, guy.localScale.z);
         }
@@ -53,5 +57,18 @@ public class look : MonoBehaviour
         // }
         
         
+    }
+    void tellRight(){
+        if(OnSwitchSide != null){
+            OnSwitchSide(true);
+        }
+        rig.right();
+    }
+    void tellLeft(){
+        if(OnSwitchSide != null){
+            OnSwitchSide(false);
+        }
+        rig.left();
+        //pic.left();
     }
 }
