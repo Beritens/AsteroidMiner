@@ -10,11 +10,11 @@ public class pickaxe : tool
     public Color selectColor;
     public float strenth =10f;
     //look look;
-    public Transform arm1;
-    public Transform arm2;
     public GameObject pickaxePrefab;
     public Transform foregroundShoulder;
     public Transform backgroundShoulder;
+    Vector2 localShoulderPos;
+    public ParticleSystem pickaxeHit;
 
     // Start is called before the first frame update
     void Start()
@@ -27,13 +27,19 @@ public class pickaxe : tool
         belt = GameObject.FindObjectOfType<AsteroidBelt>().GetComponent<AsteroidBelt>();
         select = GameObject.FindObjectOfType<select>().GetComponent<select>();
         look.OnSwitchSide += OnSwitchSidePic;
+        pickaxeHit.gameObject.SetActive(true);
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        //GameObject obj = MouseOver();
+        float lol;
+        localShoulderPos = transform.InverseTransformPoint(foregroundShoulder.position);
+        if(!rightOri){
+            localShoulderPos = transform.InverseTransformPoint(backgroundShoulder.position);
+        }
+        GameObject obj = MouseOver(transform.TransformPoint(localShoulderPos),out lol);
         if(Input.GetButtonDown("Fire1")){
             startdig();
             // if(obj != null){
@@ -44,8 +50,14 @@ public class pickaxe : tool
             // }
             
         }
-        //if(obj != null ){
-            //select.selectObject(obj,selectColor);
+        if(obj != null ){
+            if(lol <= reach)
+                select.selectObject(obj,selectColor);
+            else{
+                select.deselect();
+            }
+            // else if(lol > reach)
+            //     select.selectObject(obj,selectColorOOR);
             // if(Input.GetButtonDown("Fire1")){
             //     asteroid ast = obj.GetComponent<asteroid>();
             //     if(ast != null){
@@ -53,10 +65,10 @@ public class pickaxe : tool
             //     }
             // }
             
-        //}
-        //else{
-          //  select.deselect();
-       // }
+        }
+        else{
+           select.deselect();
+        }
     }
     public void OnSwitchSidePic(bool rightori){
         FocusForeground.GetComponent<returnToPos>().enabled = true;
@@ -89,12 +101,13 @@ public class pickaxe : tool
         }
         float dist;
         GameObject obj = MouseOver(shoulderPos,out dist);
-        Debug.Log(dist);
         if(obj == null)
             return;
         
         if(dist<= reach){
             asteroid ast = obj.GetComponent<asteroid>();
+                pickaxeHit.transform.position = cam.ScreenToWorldPoint(Input.mousePosition);
+                pickaxeHit.Play();
                 if(ast != null){
                     ast.damage(strenth);
                 }
@@ -108,12 +121,13 @@ public class pickaxe : tool
         animatePickIsRunning = true;
         focus.GetComponent<returnToPos>().enabled = false;
         focus.GetComponent<DistanceJoint2D>().enabled = false;
-        
         float animtime = 0;
             
         while(animtime <= raiseDuration){
             animtime += Time.deltaTime;
-            focus.localPosition = Vector2.Lerp(focus.localPosition, Vector2.up, animtime/raiseDuration);
+            Vector2 direction = ((Vector2)transform.InverseTransformPoint(GetWantedHandPos())-localShoulderPos);
+            //Debug.Log((Quaternion.Euler(0,0,90*(rightOri? 1: -1))*direction).normalized.magnitude);
+            focus.localPosition = Vector2.Lerp(focus.localPosition, localShoulderPos+(Vector2)((Quaternion.Euler(0,0,80*(rightOri? 1: -1))*direction).normalized*0.4f), animtime/raiseDuration);
             yield return null;
         }
         while(animtime <= swingDur+raiseDuration){

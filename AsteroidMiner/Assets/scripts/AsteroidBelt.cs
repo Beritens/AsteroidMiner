@@ -45,12 +45,15 @@ public class AsteroidBelt : MonoBehaviour
         loadSectors();
     }
 
-    public void load(SaveData.Objekte[] sects){
+    public void load(SaveData data){
+        SaveData.Objekte[] sects = data.sectors;
         foreach(SaveData.Objekte objs in sects){
             sectors.Add(new Vector2Int(objs.key[0],objs.key[1]),new List<Object>(objs.objs));
             sectorsToSave.Add(new Vector2Int(objs.key[0],objs.key[1]));
         }
+        seed = data.seed;
     }
+
     // Update is called once per frame
     void Update()
     {

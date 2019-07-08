@@ -153,4 +153,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4abb680fde246aa4a84d2bc370343a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 20
+  health: 40
+  stages:
+  - {fileID: 21300000, guid: 8e9a8f1b4e4004d4195ef6d7d4f04b99, type: 3}
+  - {fileID: 21300000, guid: ca1aafb751b241149bc91bd639603823, type: 3}
+  - {fileID: 21300000, guid: 7deb2670a52bc6345bf74aabbb66af66, type: 3}
+  dropCircle: 2
+  dropCountRange: {x: 1, y: 4}

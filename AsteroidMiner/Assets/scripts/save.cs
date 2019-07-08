@@ -28,7 +28,7 @@ public class save : MonoBehaviour
             for(int i = 0; i< sectorArr.Length; i++){
                 sectorArr[i] = new SaveData.Objekte(asteroidBelt.sectors[asteroidBelt.sectorsToSave[i]],asteroidBelt.sectorsToSave[i]);
             }
-            SaveData save = new SaveData(sectorArr);
+            SaveData save = new SaveData(sectorArr,asteroidBelt.seed);
             SaveSystem.SaveWorld(save,path);
             Debug.Log("saved");});
         t.Start();
@@ -37,7 +37,7 @@ public class save : MonoBehaviour
     void loadWorld(){
         data = SaveSystem.loadWorld(saveName);
         if(data != null){
-            asteroidBelt.load(data.sectors);
+            asteroidBelt.load(data);
         }
         
     }
@@ -50,9 +50,11 @@ public class save : MonoBehaviour
 }
 [System.Serializable]
 public class SaveData {
-    public SaveData(Objekte[] sects){
+    public SaveData(Objekte[] sects, int seed){
         this.sectors = sects;
+        this.seed = seed;
     }
+    public int seed;
     [System.Serializable]
     public class Objekte
     {

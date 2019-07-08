@@ -19,7 +19,7 @@ public class tool : MonoBehaviour
     public int OrderInLayer1 = 3;
     public int orderInLayer2 = -2;
     protected Transform toolTrans;
-    protected bool rightOri;
+    protected bool rightOri = true;
     SpriteRenderer ToolspriteRenderer;
     /// <summary>
     /// Start is called on the frame when a script is enabled just before

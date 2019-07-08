@@ -171,3 +171,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 40
+  stages:
+  - {fileID: 21300000, guid: 6b7de2ea050d7b94aa22a5c837580067, type: 3}
+  - {fileID: 21300000, guid: d65b329fa01e6124690a48ce0cb0f812, type: 3}
+  - {fileID: 21300000, guid: 5973794f5f4e8984c981fe966e5604f5, type: 3}
+  dropCircle: 3
+  dropCountRange: {x: 3, y: 7}

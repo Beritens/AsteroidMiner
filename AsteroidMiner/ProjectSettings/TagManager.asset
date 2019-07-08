@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - asteroid
+  - drop
   layers:
   - Default
   - TransparentFX
