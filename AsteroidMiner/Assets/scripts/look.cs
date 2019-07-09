@@ -11,7 +11,6 @@ public class look : MonoBehaviour
     Camera cam;
     public Vector2 headLimit;
     public rigging rig;
-    public pickaxe pic;
     public delegate void OnSwitchSideHandler(bool right);
     public event OnSwitchSideHandler OnSwitchSide;
  
@@ -32,13 +31,13 @@ public class look : MonoBehaviour
         headlight.up = direction;
         //float angle = Mathf.Atan2(direction.x,direction.y)* Mathf.Rad2Deg;
         
-        if(transform.InverseTransformPoint(mousepos).x <0 && right){
+        if(transform.InverseTransformPoint(mousepos).x <-0.2f && right){
             right = false;
             tellLeft();
             
             guy.localScale = new Vector3(guy.localScale.x *-1, guy.localScale.y, guy.localScale.z);
         }
-        else if(transform.InverseTransformPoint(mousepos).x >0 && !right){
+        else if(transform.InverseTransformPoint(mousepos).x >0.2f && !right){
             right = true;
             tellRight();
             

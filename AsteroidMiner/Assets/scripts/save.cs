@@ -9,12 +9,14 @@ public class save : MonoBehaviour
     public AsteroidBelt asteroidBelt;
     public static save Instance;
     SaveData data;
+    public savePlayer savePlayer;
     
     void Awake()
     {
         Instance = this;
         if(saveName != null){
             loadWorld();
+            savePlayer.load();
         }
     }
     Thread t;
@@ -45,8 +47,10 @@ public class save : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.J)){
             saveWorld();
+            savePlayer.save();
         }
     }
+    
 }
 [System.Serializable]
 public class SaveData {

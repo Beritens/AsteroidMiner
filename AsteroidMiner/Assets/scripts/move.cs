@@ -12,11 +12,42 @@ public class move : MonoBehaviour
     [Header("jets")]
     public Light2D[] jetLights;
     public ParticleSystem[] jetParticles;
+    public bool[]  down = new bool[32];
+    public bool[]  right = new bool[32];
+    public bool[] left = new bool[32];
+    //public bool[]up = new bool[32];
+    public bool[] up = new bool[32];
+    
+    int uI = 0;
+    int dI =0;
+    int rI = 0;
+    int lI = 0;
     
     // Start is called before the first frame update
     void Start()
     {
+        
         rb = GetComponent<Rigidbody2D>();
+    }
+    public int AddUp(){
+        uI++;
+        up[uI]=false;
+        return(uI);
+    }
+    public int AddDown(){
+        dI++;
+        down[dI]=false;
+        return(dI);
+    }
+    public int AddRight(){
+        rI++;
+        right[rI]=false;
+        return(rI);
+    }
+    public int AddLeft(){
+        lI++;
+        left[lI]=false;
+        return(lI);
     }
 
     // Update is called once per frame
@@ -26,58 +57,105 @@ public class move : MonoBehaviour
         float y = Input.GetAxis("Vertical");
         float xraw = Input.GetAxisRaw("Horizontal");
         float yraw = Input.GetAxisRaw("Vertical");
+        #region 
+        if(xraw>0){
+            right[0]= true;
+            left[0]= false;
+        }
+        else if(xraw<0){
+            right[0]= false;
+            left[0]= true;
+        }
+        else{
+            right[0]= false;
+            left[0]= false;
+        }
+        if(yraw>0){
+        up[0]= true;
+            down[0]= false;
+        }
+        else if(yraw<0){
+        up[0]= false;
+            down[0]= true;
+        }
+        else{
+        up[0]= false;
+            down[0]= false;
+        }
+        #endregion
         
         Vector2 direction = new Vector2(x,y).Rotate(rb.rotation);
         //rb.velocity=(transform.up * y * speed);
-        rb.AddForce(transform.up * y * speed);
-        rb.AddTorque(-x *angularSpeed);
+        BoostUp(y);
+        Rotate(-x);
         //rb.angularVelocity = Mathf.Clamp(rb.angularVelocity,-maxAngularVelocity,maxAngularVelocity);
         //transform.position += new Vector3(x,y,0)*speed;
-        jets(xraw,yraw);
+        jets();
         //later an upgarde
         if(Input.GetButton("slowDown")){
             rb.velocity *= 0.98f;
             rb.angularVelocity *= 0.98f;
         }
     }
-    void jets(float x, float y){
-        if(x!= 0){
-            if(x>0){
-                EnableJet(0);
-                DisableJet(1);
-                EnableJet(2);
-                DisableJet(3);
-            }
-            else{
-                DisableJet(0);
-                EnableJet(1);
-                DisableJet(2);
-                EnableJet(3);
-            }
+    public void BoostUp(float power){
+        rb.AddForce(transform.up * power * speed);
+    }
+    public void Rotate(float power){
+        rb.AddTorque(power*angularSpeed);
+    }
+    public void jets(){
+        bool upJ = false;
+        bool downJ = false;
+        bool rightJ = false;
+        bool leftJ = false;
+        foreach(bool b in up){
+            if(b)
+                upJ = true;
+        }
+        foreach(bool b in down){
+            if(b)
+                downJ = true;
+        }
+        foreach(bool b in left){
+            if(b)
+                leftJ = true;
+        }
+        foreach(bool b in right){
+            if(b)
+                rightJ = true;
+        }
+        if(rightJ){
+            EnableJet(0);
+            EnableJet(2);
         }
         else{
             DisableJet(0);
-            DisableJet(1);
             DisableJet(2);
+        }
+        if(leftJ){
+            EnableJet(1);
+            EnableJet(3);
+        }
+        else{
+            DisableJet(1);
             DisableJet(3);
         }
-        if(y!=0){
-        if(y>0){
-                EnableJet(4);
-                EnableJet(5);
-                DisableJet(6);
-            }
-            else{
-                DisableJet(4);
-                DisableJet(5);
-                EnableJet(6);
-            }
+        
+        if(upJ){
+            EnableJet(4);
+            EnableJet(5);
         }
         else{
             DisableJet(4);
             DisableJet(5);
+        }
+        if(downJ){
+            EnableJet(6);
+        }
+        else{
             DisableJet(6);
         }
+        
     }
     void EnableJet(int i){
         jetLights[i].enabled = true;

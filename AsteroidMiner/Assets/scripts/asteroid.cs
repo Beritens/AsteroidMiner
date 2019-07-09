@@ -37,11 +37,11 @@ public class asteroid : MonoBehaviour
     }
     void destroy(){
         AsteroidBelt ab = GameObject.FindObjectOfType<AsteroidBelt>().GetComponent<AsteroidBelt>();
-        ab.DeleteObject(transform);
+        ab.DeleteObject(transform,transform.GetSiblingIndex());
         int count = Random.Range(dropCountRange.x,dropCountRange.y);
         while( count > 0){
             count--;
-            AsteroidBelt.Object drop = new AsteroidBelt.Object((transform.position+Random.insideUnitSphere*dropCircle)-transform.parent.position,0,0,1,false);
+            AsteroidBelt.Object drop = new AsteroidBelt.Object((transform.position+Random.insideUnitSphere*dropCircle)-transform.parent.position,0,Random.Range(0f,360f),Random.Range(0.8f,1.2f),false);
             ab.AddObject(drop,transform.parent.gameObject,true);
         }
         
