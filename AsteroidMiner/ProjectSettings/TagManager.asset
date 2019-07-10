@@ -6,6 +6,7 @@ TagManager:
   tags:
   - asteroid
   - drop
+  - ground
   layers:
   - Default
   - TransparentFX

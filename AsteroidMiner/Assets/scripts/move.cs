@@ -8,6 +8,10 @@ public class move : MonoBehaviour
     public float speed =1f;
     public float angularSpeed =1f;
     Rigidbody2D rb;
+    [Header("ground")]
+    public ground ground;
+    public float groundSpeed;
+    public float jumpForce;
 
     [Header("jets")]
     public Light2D[] jetLights;
@@ -51,51 +55,75 @@ public class move : MonoBehaviour
     }
 
     // Update is called once per frame
+    public bool g= false;
     void FixedUpdate()
     {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
-        float xraw = Input.GetAxisRaw("Horizontal");
-        float yraw = Input.GetAxisRaw("Vertical");
-        #region 
-        if(xraw>0){
-            right[0]= true;
-            left[0]= false;
-        }
-        else if(xraw<0){
-            right[0]= false;
-            left[0]= true;
+        if(!ground.grounded){
+            g= false;
+            float xraw = Input.GetAxisRaw("Horizontal");
+            float yraw = Input.GetAxisRaw("Vertical");
+            #region 
+            if(xraw>0){
+                right[0]= true;
+                left[0]= false;
+            }
+            else if(xraw<0){
+                right[0]= false;
+                left[0]= true;
+            }
+            else{
+                right[0]= false;
+                left[0]= false;
+            }
+            if(yraw>0){
+                up[0]= true;
+                down[0]= false;
+            }
+            else if(yraw<0){
+                up[0]= false;
+                down[0]= true;
+            }
+            else{
+                up[0]= false;
+                down[0]= false;
+            }
+            #endregion
+            
+            Vector2 direction = new Vector2(x,y).Rotate(rb.rotation);
+            //rb.velocity=(transform.up * y * speed);
+            BoostUp(y);
+            Rotate(-x);
+            //rb.angularVelocity = Mathf.Clamp(rb.angularVelocity,-maxAngularVelocity,maxAngularVelocity);
+            //transform.position += new Vector3(x,y,0)*speed;
+            jets();
+            //later an upgarde
+            if(Input.GetButton("slowDown")){
+                rb.velocity *= 0.98f;
+                rb.angularVelocity *= 0.98f;
+            }
         }
         else{
-            right[0]= false;
-            left[0]= false;
+            if(g==false){
+                g= true;
+                right[0]= false;
+                left[0]= false;
+                up[0]= false;
+                down[0]= false;
+            }
+            jets();
+            moveGround(x,y);
         }
-        if(yraw>0){
-        up[0]= true;
-            down[0]= false;
+    }
+    public void moveGround(float x, float y){
+        //rb.AddForce(transform.right*x*groundSpeed);
+        if(y> 0 && ground.superGrounded){
+            rb.AddForce(transform.up*jumpForce,ForceMode2D.Impulse);
         }
-        else if(yraw<0){
-        up[0]= false;
-            down[0]= true;
-        }
-        else{
-        up[0]= false;
-            down[0]= false;
-        }
-        #endregion
-        
-        Vector2 direction = new Vector2(x,y).Rotate(rb.rotation);
-        //rb.velocity=(transform.up * y * speed);
-        BoostUp(y);
-        Rotate(-x);
-        //rb.angularVelocity = Mathf.Clamp(rb.angularVelocity,-maxAngularVelocity,maxAngularVelocity);
-        //transform.position += new Vector3(x,y,0)*speed;
-        jets();
-        //later an upgarde
-        if(Input.GetButton("slowDown")){
-            rb.velocity *= 0.98f;
-            rb.angularVelocity *= 0.98f;
-        }
+        float horizontalVel = transform.InverseTransformDirection(rb.velocity).x;
+        rb.velocity -= (Vector2)transform.right*horizontalVel;
+        rb.velocity += (Vector2)transform.right*x*groundSpeed;
     }
     public void BoostUp(float power){
         rb.AddForce(transform.up * power * speed);

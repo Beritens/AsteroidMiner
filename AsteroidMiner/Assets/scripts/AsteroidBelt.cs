@@ -117,7 +117,8 @@ public class AsteroidBelt : MonoBehaviour
                 float xcord = (sectorPos.x+(float)x*scale);
                 float ycord = (sectorPos.y+(float)y*scale);
                 //float density = Mathf.Clamp((ycord-11000) / (maxDensityY-11000),0,0.9f);
-                float xdens = ycord-11000;
+                float dist = new Vector2(xcord,ycord).magnitude;
+                float xdens = dist-11000;
                 float density = (m*xdens +1-Mathf.Pow(q,xdens))/2;
                 float perlin = Mathf.PerlinNoise(seed+xcord*noiseScale*0.9876f/sectorSize,seed+ycord*noiseScale*0.9876f/sectorSize);
                 if((float)rand.NextDouble()<density){//perlin>(1-0.5f*density) || perlin < 0.4f*density){

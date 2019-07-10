@@ -9,7 +9,7 @@ public class lookToMouse : MonoBehaviour
     Rigidbody2D rb;
     int indexR;
     int indexL;
-    bool on;
+    bool on = true;
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
@@ -36,7 +36,7 @@ public class lookToMouse : MonoBehaviour
     void FixedUpdate()
     {
 
-        if(on){
+        if(on && !move.g){
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = (mousePos+Vector2.up*0.05f)-(Vector2)transform.position;
             float angle = Vector2.SignedAngle(transform.up,direction);
