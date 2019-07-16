@@ -108,7 +108,8 @@ public class AsteroidBelt : MonoBehaviour
     public float m = 0.0005f;
     public float q = 0.98f;
     void newSector(Vector2Int pos){
-        System.Random rand = new System.Random(seed+(int)pos.magnitude+(int)pos.x);
+        //seed+(int)pos.magnitude+(int)pos.x
+        System.Random rand = new System.Random((int)(seed + 0.5f*(pos.x+pos.y)*(pos.x+pos.y+1)+pos.y));
         List<Object> astros = new List<Object>();
         float scale = sectorSize/asteroidGridSize;
         Vector2 sectorPos = (Vector2)pos*sectorSize;

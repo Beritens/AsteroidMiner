@@ -24,7 +24,7 @@ public class look : MonoBehaviour
     public bool right = true;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector2 mousepos = cam.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = mousepos-(Vector2)head.position;

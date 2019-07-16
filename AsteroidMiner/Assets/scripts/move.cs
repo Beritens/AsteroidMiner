@@ -10,8 +10,11 @@ public class move : MonoBehaviour
     Rigidbody2D rb;
     [Header("ground")]
     public ground ground;
+    public Animator anim;
     public float groundSpeed;
     public float jumpForce;
+    public look look;
+    public float groundDamp= 0.9f;
 
     [Header("jets")]
     public Light2D[] jetLights;
@@ -21,6 +24,7 @@ public class move : MonoBehaviour
     public bool[] left = new bool[32];
     //public bool[]up = new bool[32];
     public bool[] up = new bool[32];
+    
     
     int uI = 0;
     int dI =0;
@@ -54,16 +58,22 @@ public class move : MonoBehaviour
         return(lI);
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
     public bool g= false;
     void FixedUpdate()
     {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
+        float xraw = Input.GetAxisRaw("Horizontal");
+        float yraw = Input.GetAxisRaw("Vertical");
         if(!ground.grounded){
+            if(g){
+                anim.enabled = false;
+            }
             g= false;
-            float xraw = Input.GetAxisRaw("Horizontal");
-            float yraw = Input.GetAxisRaw("Vertical");
+            
             #region 
             if(xraw>0){
                 right[0]= true;
@@ -106,14 +116,26 @@ public class move : MonoBehaviour
         }
         else{
             if(g==false){
+                anim.enabled = true;
                 g= true;
                 right[0]= false;
                 left[0]= false;
                 up[0]= false;
                 down[0]= false;
+                rb.angularDrag = 100f;
+                
+                rb.rotation = Mathf.Atan2(ground.normal.y,ground.normal.x)* Mathf.Rad2Deg-90;
+                float horizontalVel = transform.InverseTransformDirection(rb.velocity).x;
+                rb.velocity = ground.normal.Rotate(-90)*horizontalVel;
+                Debug.DrawRay(transform.position,rb.velocity,Color.red,10);
+                
+                //rb.velocity = Vector2.zero;
+                
             }
+            rb.rotation = Mathf.Atan2(ground.normal.y,ground.normal.x)* Mathf.Rad2Deg-90;
+
             jets();
-            moveGround(x,y);
+            moveGround(x,yraw);
         }
     }
     public void moveGround(float x, float y){
@@ -123,7 +145,21 @@ public class move : MonoBehaviour
         }
         float horizontalVel = transform.InverseTransformDirection(rb.velocity).x;
         rb.velocity -= (Vector2)transform.right*horizontalVel;
-        rb.velocity += (Vector2)transform.right*x*groundSpeed;
+        rb.velocity += (Vector2)transform.right*(x*groundSpeed+(horizontalVel*groundDamp));
+        if(ground.superGrounded){
+            anim.enabled = true;
+            anim.SetFloat("speed",horizontalVel*(look.right?1:-1));
+            if(Mathf.Abs(horizontalVel)>0.005f || x != 0){
+                anim.SetBool("walk",true);
+
+            }
+            else{
+                anim.SetBool("walk",false);
+            }
+        }
+        else{
+            anim.enabled = false;
+        }
     }
     public void BoostUp(float power){
         rb.AddForce(transform.up * power * speed);

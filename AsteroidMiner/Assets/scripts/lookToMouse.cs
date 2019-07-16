@@ -53,7 +53,10 @@ public class lookToMouse : MonoBehaviour
             }
         }
         else{
-            rb.angularDrag = 0f;
+            if(!move.g){
+                rb.angularDrag = 0f;
+            }
+            
             move.right[indexR] = false;
             move.left[indexL] = false;
         }

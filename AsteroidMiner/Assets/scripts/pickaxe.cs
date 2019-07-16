@@ -99,18 +99,23 @@ public class pickaxe : tool
         if(!rightOri){
             shoulderPos = backgroundShoulder.position;
         }
-        float dist;
-        GameObject obj = MouseOver(shoulderPos,out dist);
-        if(obj == null)
+        //float dist;
+        Transform obj = selectObj.mouseOver();//MouseOver(shoulderPos,out dist);
+        if(obj == null || obj.transform.GetComponent<Collider2D>() == null)
             return;
+        Vector2 nearestPoint = obj.transform.GetComponent<Collider2D>().ClosestPoint(shoulderPos);
+        float dist =Vector2.Distance(shoulderPos,nearestPoint);
+        
         
         if(dist<= reach){
             asteroid ast = obj.GetComponent<asteroid>();
+            if(ast != null){
                 pickaxeHit.transform.position = cam.ScreenToWorldPoint(Input.mousePosition);
                 pickaxeHit.Play();
-                if(ast != null){
-                    ast.damage(strenth);
-                }
+                ast.damage(strenth);
+            }   
+                
+            
         }
         //StartCoroutine("animatePick");
     }

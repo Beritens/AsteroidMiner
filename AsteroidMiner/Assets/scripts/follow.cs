@@ -6,9 +6,11 @@ public class follow : MonoBehaviour
 {
     public Transform target;
     public bool fix;
-    public float lerp;
+    public float smoothTime;
     public Vector3 offset;
     Rigidbody2D playerRb;
+    Vector3 velocity = Vector3.zero;
+
     void Start()
     {
         playerRb = target.GetComponent<Rigidbody2D>();
@@ -23,11 +25,13 @@ public class follow : MonoBehaviour
     /// <summary>
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
     /// </summary>
-    void FixedUpdate()
+    void LateUpdate()
     {
         if(!fix){
             return;
         }
-        transform.position = (Vector3)Vector2.Lerp(transform.position,target.position, lerp)+offset;
+        //transform.position = Vector3.SmoothDamp(transform.position,target.position+offset,ref velocity, smoothTime);
+        transform.position = target.position+offset;
+        //transform.position = (Vector3)Vector2.Lerp(transform.position,target.position, lerp*Time.deltaTime)+offset;
     }
 }
