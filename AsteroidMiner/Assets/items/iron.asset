@@ -10,10 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f05e652f46a36148ad1412590ad88fa, type: 3}
-  m_Name: pickaxe
+  m_Name: iron
   m_EditorClassIdentifier: 
-  name: 
-  cost: 100
-  resellValue: 10
-  sprite: {fileID: 21300000, guid: ea763dcec1db3ae4db510365b34cc7c0, type: 3}
-  prefab: {fileID: 1712721333915999806, guid: db9163d4b1b29324a9beac7fd8b50947, type: 3}
+  name: iron
+  cost: 20
+  resellValue: 20
+  sprite: {fileID: 21300000, guid: d1c0271d0fa85b54f8a662b6b4cf962b, type: 3}
+  prefab: {fileID: 0}
+  values: []
+  stackable: 1
+  type: 0

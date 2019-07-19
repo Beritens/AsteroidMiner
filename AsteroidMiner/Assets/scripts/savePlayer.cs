@@ -5,11 +5,11 @@ using UnityEngine;
 public class savePlayer : MonoBehaviour
 {
     public Rigidbody2D player;
-    public ressources ressources;
+    public inventory inventory;
     public save saveCom;
     public void save(){
         string path = Application.persistentDataPath+"/" + saveCom.saveName +"Player.lol";
-        SaveDataPlayer sDP = new SaveDataPlayer(ressources.GetRessources(),player.position,player.velocity,player.rotation);
+        SaveDataPlayer sDP = new SaveDataPlayer(new float[1]{1},player.position,player.velocity,player.rotation);
         SaveSystem.SavePlayer(sDP,path);
     }
     public void load(){
@@ -18,7 +18,7 @@ public class savePlayer : MonoBehaviour
         if(sDP == null)
             return;
         
-        ressources.reload(sDP.storage);
+        inventory.reload(sDP.storage);
         player.GetComponent<reloadPlayer>().reload(sDP);
         
         

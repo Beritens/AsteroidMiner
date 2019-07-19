@@ -29,8 +29,8 @@ public class ground : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position,-transform.up,grounded? rayLengthOnGround:rayLength,lm);
-        bool g = hit.collider != null && hit.collider.tag == groundTag;
+        RaycastHit2D hit = GetGround();
+        bool g = hit.collider != null;
         if(g&&transform.position.magnitude < 10900){
             float gAn = Vector2.Angle(transform.position,hit.normal);
             if(gAn>gravityAngle){
@@ -84,6 +84,15 @@ public class ground : MonoBehaviour
             //rb.rotation  = Mathf.Atan2(hit.normal.x,hit.normal.y)*Mathf.Rad2Deg;
             
         }
+    }
+    RaycastHit2D GetGround(){
+        RaycastHit2D[] hits =  Physics2D.RaycastAll(transform.position,-transform.up,grounded? rayLengthOnGround:rayLength,lm);
+        foreach(RaycastHit2D h in hits){
+            if(h.collider != null && h.collider.tag == "ground"){
+                return h;
+            }
+        }
+        return new RaycastHit2D();
     }
     float superGroundedCkeck;
 }

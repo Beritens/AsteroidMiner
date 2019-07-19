@@ -6,6 +6,7 @@ public class rocket : selectable
 {
     bool active = false;
     Transform player;
+    public float exit;
     Rigidbody2D rb;
     public Vector2 cOM;
     public Vector2 upEngine;
@@ -20,8 +21,12 @@ public class rocket : selectable
     Camera cam;
     Transform background;
     public ParticleSystem grind;
+    bool justNow;
     public override void pressE(){
+        if(Vector2.Distance(player.position,transform.position)>6f)
+            return;
         active = true;
+        justNow = true;
         player.parent = transform;
         player.localPosition = Vector2.zero;
         player.gameObject.SetActive(false);
@@ -44,6 +49,57 @@ public class rocket : selectable
         left = new Vector2(-right.x,right.y);
         cam = Camera.main;
         background = GameObject.Find("background").transform;
+    }
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void Update()
+    {
+        if(Input.GetButtonUp("interact")){
+            justNow = false;
+        }
+        if(active){
+            if(Input.GetButtonDown("interact") && !justNow){
+                Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+                bool preferRight = transform.InverseTransformPoint(mousePos).x >= 0;
+                Vector2 exitDir = preferRight? transform.right:-transform.right;
+                if(!CheckExit(exitDir)){
+                    if(CheckExit(exitDir *= -1)){
+                        exitDir *= -1;
+                    }
+                    else{
+                        if(CheckExit(transform.up)){
+                            exitDir = transform.up*3;
+                        }
+                        else{
+                            exitDir = -transform.up*3;
+                        }
+                    }
+                }
+                player.gameObject.SetActive(true);
+                player.parent = null;
+                player.position = (Vector2)transform.position +(exitDir* exit);
+                cam.orthographicSize = 5;
+                player.up = transform.up;
+                background.localScale = new Vector3(1,1,1);
+                active = false;
+            }
+        }
+    }
+    bool CheckExit(Vector2 direction){
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position,transform.right * direction,2.5f);
+        bool h= false;
+        foreach(RaycastHit2D hit  in hits){
+            if(hit.collider != null && hit.transform != transform){
+                h = true;
+                break;
+            }
+        }
+        if(!h)
+            return true;
+        else{
+            return false;
+        }
     }
 
     /// <summary>

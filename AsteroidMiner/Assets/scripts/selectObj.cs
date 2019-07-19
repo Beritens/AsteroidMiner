@@ -10,15 +10,15 @@ public class selectObj : MonoBehaviour
     void Update()
     {
         Vector2 camPos =Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if(Input.GetKeyDown(KeyCode.E)){
+        if(Input.GetButtonDown("interact")){
            Transform sel = mouseOver();
            if(sel == null)
                 return;
-           if(Vector2.Distance(camPos,sel.position)<3f){
+           //if(Vector2.Distance(camPos,sel.position)<3f){
                if(sel.GetComponent<selectable>()!= null){
                    sel.GetComponent<selectable>().pressE();
                }
-           }
+           //}
         }
     }
     public static Transform mouseOver(){

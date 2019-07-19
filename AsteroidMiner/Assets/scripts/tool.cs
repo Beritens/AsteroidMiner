@@ -35,6 +35,8 @@ public class tool : MonoBehaviour
         ToolspriteRenderer = toolTrans.GetComponentInChildren<SpriteRenderer>();
     }
     public void OnSwitchSide(bool rightori){
+        if(this.enabled == false)
+            return;
         rightOri = rightori;
         if(rightori){
             right();

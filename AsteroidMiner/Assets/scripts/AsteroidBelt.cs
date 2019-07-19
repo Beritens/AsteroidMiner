@@ -14,11 +14,11 @@ public class AsteroidBelt : MonoBehaviour
     public float jiggleRoom = 0.25f;
     public int loadDistance = 2;
     public float unloadDistance = 60f;
+    items items;
     public Dictionary<Vector2Int,List<Object>> sectors = new Dictionary<Vector2Int, List<Object>>();
     public List<Vector2Int> sectorsToSave = new List<Vector2Int>();
     
     public GameObject[] AsteroidObjects;
-    public GameObject[] Objects;
     public Vector2 sizeMultiplierRange;
     List<GameObject> loadedSectors = new List<GameObject>();
     [System.Serializable]
@@ -39,6 +39,7 @@ public class AsteroidBelt : MonoBehaviour
     }
     void Start()
     {
+        items = items.instance;
         functionsToRunInMainThread = new List<Action>();
         if(seed == 0)
             seed = UnityEngine.Random.Range(-10000,10000);
@@ -129,7 +130,6 @@ public class AsteroidBelt : MonoBehaviour
                 }
             }
         }
-        Debug.Log(astros);
         lock (lockDings)
         {
             if(!sectors.ContainsKey(pos))
@@ -147,8 +147,17 @@ public class AsteroidBelt : MonoBehaviour
         GameObject sector = new GameObject();
         sector.transform.position = (Vector2)pos*sectorSize;
         for(int i = 0; i < objects.Count; i++){
-            GameObject[] list = objects[i].asteroid? AsteroidObjects: Objects;
-            GameObject gm = GameObject.Instantiate(list[objects[i].type],(Vector2)sector.transform.position+new Vector2(objects[i].position[0],objects[i].position[1]),Quaternion.identity,sector.transform);
+            
+            GameObject gm = null;
+            if(objects[i].asteroid){
+                GameObject[] list = AsteroidObjects;
+                gm = GameObject.Instantiate(list[objects[i].type],(Vector2)sector.transform.position+new Vector2(objects[i].position[0],objects[i].position[1]),Quaternion.identity,sector.transform);
+            }
+            else{
+                gm = items.DropItem(objects[i].type,(Vector2)sector.transform.position+new Vector2(objects[i].position[0],objects[i].position[1])).gameObject;
+                gm.transform.parent = sector.transform;
+
+            }
             gm.GetComponent<Rigidbody2D>().rotation = objects[i].rotation;
             gm.transform.localScale *=objects[i].size; 
             
@@ -205,8 +214,16 @@ public class AsteroidBelt : MonoBehaviour
                 sectorsToSave.Add(sectorKey);
             }
             if(spawn){
-                GameObject[] list = obj.asteroid? AsteroidObjects: Objects;
-                GameObject gm = GameObject.Instantiate(list[obj.type],(Vector2)sector.transform.position+new Vector2(obj.position[0],obj.position[1]),Quaternion.identity,sector.transform);
+                GameObject gm = null;
+                if(obj.asteroid){
+                    GameObject[] list = AsteroidObjects;
+                    gm = GameObject.Instantiate(list[obj.type],(Vector2)sector.transform.position+new Vector2(obj.position[0],obj.position[1]),Quaternion.identity,sector.transform);
+                }
+                else{
+                    gm = items.DropItem(obj.type,(Vector2)sector.transform.position+new Vector2(obj.position[0],obj.position[1])).gameObject;
+                    gm.transform.parent = sector.transform;
+
+                }
                 gm.GetComponent<Rigidbody2D>().rotation = obj.rotation;
                 gm.transform.localScale *=obj.size; 
             }

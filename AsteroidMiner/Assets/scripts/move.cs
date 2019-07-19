@@ -34,7 +34,6 @@ public class move : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
         rb = GetComponent<Rigidbody2D>();
     }
     public int AddUp(){
@@ -71,6 +70,7 @@ public class move : MonoBehaviour
         if(!ground.grounded){
             if(g){
                 anim.enabled = false;
+                rb.angularDrag = 0f;
             }
             g= false;
             
@@ -115,7 +115,7 @@ public class move : MonoBehaviour
             }
         }
         else{
-            if(g==false){
+            if(!g){
                 anim.enabled = true;
                 g= true;
                 right[0]= false;

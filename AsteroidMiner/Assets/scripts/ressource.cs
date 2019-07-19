@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class ressource : MonoBehaviour
 {
-    public int type = 0;
+    public int item = 0;
 }
