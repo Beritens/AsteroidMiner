@@ -470,7 +470,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7168096589748134001}
   m_Layer: 0
-  m_Name: bone_1
+  m_Name: backgroundShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -501,7 +501,7 @@ GameObject:
   m_Component:
   - component: {fileID: 753842854864428227}
   m_Layer: 0
-  m_Name: bone_1
+  m_Name: foregroundShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class collect : MonoBehaviour
 {
-    public inventory inventory;
+    inventory inventory;
     public AsteroidBelt asteroidBelt;
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -23,8 +23,8 @@ public class collect : MonoBehaviour
         ressource ressource = t.GetComponent<ressource>();
         if(ressource != null){
             inventory.AddToSlots(ressource.item);
-            asteroidBelt.DeleteObject(t,t.GetSiblingIndex());
-            Destroy(t.gameObject);
+            asteroidBelt.DeleteItem(t);
+            //Destroy(t.gameObject);
         }
     }
 }

@@ -5,28 +5,23 @@ using UnityEngine;
 public class pickaxe : tool
 {
     Camera cam;
-    AsteroidBelt belt;
     select select;
     public Color selectColor;
     public float strenth =10f;
-    //look look;
-    public GameObject pickaxePrefab;
-    public Transform foregroundShoulder;
-    public Transform backgroundShoulder;
+    Transform foregroundShoulder;
+    Transform backgroundShoulder;
     Vector2 localShoulderPos;
-    public ParticleSystem pickaxeHit;
+    ParticleSystem pickaxeHit;
 
     // Start is called before the first frame update
     void Start()
     {
-        toolTrans = GameObject.Instantiate(pickaxePrefab, handForeground.position, handForeground.rotation,handForeground).transform;
-        star();
-        right();
+        foregroundShoulder = GameObject.Find("foregroundShoulder").transform;
+        backgroundShoulder = GameObject.Find("backgroundShoulder").transform;
         //look = GetComponent<look>();
         cam = Camera.main;
-        belt = GameObject.FindObjectOfType<AsteroidBelt>().GetComponent<AsteroidBelt>();
         select = GameObject.FindObjectOfType<select>().GetComponent<select>();
-        look.OnSwitchSide += OnSwitchSidePic;
+        pickaxeHit = toolManager.effectsContainer.GetChild(0).GetComponent<ParticleSystem>();
         pickaxeHit.gameObject.SetActive(true);
         
     }
@@ -35,11 +30,11 @@ public class pickaxe : tool
     void Update()
     {
         float lol;
-        localShoulderPos = transform.InverseTransformPoint(foregroundShoulder.position);
-        if(!rightOri){
-            localShoulderPos = transform.InverseTransformPoint(backgroundShoulder.position);
+        localShoulderPos = toolManager.transform.InverseTransformPoint(foregroundShoulder.position);
+        if(!toolManager.rightOri){
+            localShoulderPos = toolManager.transform.InverseTransformPoint(backgroundShoulder.position);
         }
-        GameObject obj = MouseOver(transform.TransformPoint(localShoulderPos),out lol);
+        GameObject obj = MouseOver(toolManager.transform.TransformPoint(localShoulderPos),out lol);
         if(Input.GetButtonDown("Fire1")){
             startdig();
             // if(obj != null){
@@ -70,16 +65,31 @@ public class pickaxe : tool
            select.deselect();
         }
     }
-    public void OnSwitchSidePic(bool rightori){
-        FocusForeground.GetComponent<returnToPos>().enabled = true;
-        FocusForeground.GetComponent<DistanceJoint2D>().enabled = true;
-        FocusBackground.GetComponent<returnToPos>().enabled = true;
-        FocusBackground.GetComponent<DistanceJoint2D>().enabled = true;
+    public override void OnSwitchSide(bool rightori){
+        toolManager.FocusForeground.GetComponent<returnToPos>().enabled = true;
+        toolManager.FocusForeground.GetComponent<DistanceJoint2D>().enabled = true;
+        toolManager.FocusBackground.GetComponent<returnToPos>().enabled = true;
+        toolManager.FocusBackground.GetComponent<DistanceJoint2D>().enabled = true;
+        
         if(animatePickIsRunning){
-            focus.GetComponent<returnToPos>().enabled = false;
-            focus.GetComponent<DistanceJoint2D>().enabled = false;
+            IKStuffOnGround(rightori? 2:3, true);
+            IKStuffOnGround(rightori? 3:2, false);
+            toolManager.focus.GetComponent<returnToPos>().enabled = false;
+            toolManager.focus.GetComponent<DistanceJoint2D>().enabled = false;
         }
         
+    }
+    /// <summary>
+    /// This function is called when the MonoBehaviour will be destroyed.
+    /// </summary>
+    void OnDestroy()
+    {
+        toolManager.FocusForeground.GetComponent<returnToPos>().enabled = true;
+        toolManager.FocusForeground.GetComponent<DistanceJoint2D>().enabled = true;
+        toolManager.FocusBackground.GetComponent<returnToPos>().enabled = true;
+        toolManager.FocusBackground.GetComponent<DistanceJoint2D>().enabled = true;
+        if(pickaxeHit != null)
+            pickaxeHit.gameObject.SetActive(false);
     }
     public float reach = 1;
     void startdig(){
@@ -96,15 +106,14 @@ public class pickaxe : tool
     void dig(){
         
         Vector2 shoulderPos = foregroundShoulder.position;
-        if(!rightOri){
+        if(!toolManager.rightOri){
             shoulderPos = backgroundShoulder.position;
         }
-        //float dist;
-        Transform obj = selectObj.mouseOver();//MouseOver(shoulderPos,out dist);
+        float dist;
+        GameObject obj = MouseOver(shoulderPos,out dist);
         if(obj == null || obj.transform.GetComponent<Collider2D>() == null)
             return;
-        Vector2 nearestPoint = obj.transform.GetComponent<Collider2D>().ClosestPoint(shoulderPos);
-        float dist =Vector2.Distance(shoulderPos,nearestPoint);
+       // Vector2 nearestPoint = obj.transform.GetComponent<Collider2D>().ClosestPoint(shoulderPos);
         
         
         if(dist<= reach){
@@ -124,20 +133,21 @@ public class pickaxe : tool
     bool animatePickIsRunning = false;
     IEnumerator animatePick(){
         animatePickIsRunning = true;
-        focus.GetComponent<returnToPos>().enabled = false;
-        focus.GetComponent<DistanceJoint2D>().enabled = false;
+        toolManager.focus.GetComponent<returnToPos>().enabled = false;
+        toolManager.focus.GetComponent<DistanceJoint2D>().enabled = false;
+        IKStuffOnGround(toolManager.rightOri? 2:3, true);
         float animtime = 0;
             
         while(animtime <= raiseDuration){
             animtime += Time.deltaTime;
-            Vector2 direction = ((Vector2)transform.InverseTransformPoint(GetWantedHandPos())-localShoulderPos);
+            Vector2 direction = ((Vector2)toolManager.transform.InverseTransformPoint(GetWantedHandPos())-localShoulderPos);
             //Debug.Log((Quaternion.Euler(0,0,90*(rightOri? 1: -1))*direction).normalized.magnitude);
-            focus.localPosition = Vector2.Lerp(focus.localPosition, localShoulderPos+(Vector2)((Quaternion.Euler(0,0,80*(rightOri? 1: -1))*direction).normalized*0.4f), animtime/raiseDuration);
+            toolManager.focus.localPosition = Vector2.Lerp(toolManager.focus.localPosition, localShoulderPos+(Vector2)((Quaternion.Euler(0,0,80*(toolManager.rightOri? 1: -1))*direction).normalized*0.4f), animtime/raiseDuration);
             yield return null;
         }
         while(animtime <= swingDur+raiseDuration){
             animtime += Time.deltaTime;
-            focus.position = Vector2.Lerp(focus.position, GetWantedHandPos(), (animtime-raiseDuration)/swingDur);
+            toolManager.focus.position = Vector2.Lerp(toolManager.focus.position, GetWantedHandPos(), (animtime-raiseDuration)/swingDur);
             yield return null;
         }
         dig();
@@ -149,8 +159,10 @@ public class pickaxe : tool
             animatePickIsRunning = false;
             yield return new WaitForSeconds(0.1f);
             if(!animatePickIsRunning){
-                focus.GetComponent<returnToPos>().enabled = true;
-                focus.GetComponent<DistanceJoint2D>().enabled = true;
+                toolManager.focus.GetComponent<returnToPos>().enabled = true;
+                toolManager.focus.GetComponent<DistanceJoint2D>().enabled = true;
+                IKStuffOnGround(2, false);
+                IKStuffOnGround(3, false);
             }
             
         }
@@ -188,5 +200,11 @@ public class pickaxe : tool
             return null;
         }
         
+    }
+    void IKStuffOnGround(int fol, bool enabled){
+        if(ground.superGrounded){
+            ground.ikStuff[fol].enabled = enabled;
+        }
+
     }
 }

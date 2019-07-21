@@ -5,10 +5,10 @@ using UnityEngine;
 public class follow : MonoBehaviour
 {
     public Transform target;
-    public bool fix;
     public float smoothTime;
     public Vector3 offset;
     Rigidbody2D playerRb;
+    public bool late = false;
     Vector3 velocity = Vector3.zero;
 
     void Start()
@@ -17,7 +17,7 @@ public class follow : MonoBehaviour
     }
     void Update()
     {
-        if(fix){
+        if(late){
             return;
         }
         transform.position = target.position+offset;
@@ -27,7 +27,7 @@ public class follow : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        if(!fix){
+        if(!late){
             return;
         }
         //transform.position = Vector3.SmoothDamp(transform.position,target.position+offset,ref velocity, smoothTime);

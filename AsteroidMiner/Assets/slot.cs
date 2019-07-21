@@ -19,8 +19,10 @@ public class slot : MonoBehaviour, IBeginDragHandler, IDragHandler,  IDropHandle
 
     public void OnDrop(PointerEventData eventData)
     {
-        if(onHand)
+        if(onHand && eventData.button == PointerEventData.InputButton.Left){
             invAc.releaseOnHand();
+        }
+            
     }
 
     // Start is called before the first frame update

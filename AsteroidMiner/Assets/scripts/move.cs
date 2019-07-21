@@ -145,7 +145,10 @@ public class move : MonoBehaviour
         }
         float horizontalVel = transform.InverseTransformDirection(rb.velocity).x;
         rb.velocity -= (Vector2)transform.right*horizontalVel;
-        rb.velocity += (Vector2)transform.right*(x*groundSpeed+(horizontalVel*groundDamp));
+        float gD = groundDamp;
+        if(Mathf.Abs(horizontalVel) < 0.5f) gD = 0;
+        horizontalVel*=gD;
+        rb.velocity += (Vector2)transform.right*(x*groundSpeed+(horizontalVel));
         if(ground.superGrounded){
             anim.enabled = true;
             anim.SetFloat("speed",horizontalVel*(look.right?1:-1));

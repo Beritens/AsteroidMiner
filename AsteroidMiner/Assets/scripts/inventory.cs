@@ -107,18 +107,20 @@ public class inventory : MonoBehaviour
 
     }
     public int AddToSlotsAmount(int item, int number, int slot, out int reject){
-        if(slots[slot].y == 100 || slots[slot].x != item || !items.instance.itemObjects[item].stackable &&slots[slot].y >0){
+        if(slots[slot].y == 100 || slots[slot].x != item &&slots[slot].y >0 || !items.instance.itemObjects[item].stackable &&slots[slot].y >0){
             reject = 0;
             return number;
         }
         else if(100-slots[slot].y>= number){
-            Debug.Log("jo");
+            slots[slot].x = item;
             slots[slot].y += number;
             reject = 0;
             return 0;
         }  
         else{
             int rest = slots[slot].y+number-100;
+            slots[slot].x = item;
+            slots[slot].y = 100;
             reject = AddToSlotsAmount(item, rest, true);
             
             return rest;
@@ -150,17 +152,22 @@ public class inventory : MonoBehaviour
         return false;
     }
     public int AddToToolsAmount(int item, int number, int slot, out int reject){
-    if(tools[slot].y == 100 || tools[slot].x != item || !items.instance.itemObjects[item].stackable &&tools[slot].y >0 || items.instance.itemObjects[item].type != 1){
+    if(tools[slot].y == 100 || (tools[slot].x != item &&tools[slot].y >0) || (!items.instance.itemObjects[item].stackable &&tools[slot].y >0) || (items.instance.itemObjects[item].type != 1)){
+        Debug.Log((tools[slot].y == 100) + " "+ (tools[slot].x != item &&tools[slot].y >0)+ " " +(!items.instance.itemObjects[item].stackable &&tools[slot].y >0) +" "+ (items.instance.itemObjects[item].type != 1));
         reject = 0;
         return number;
     }
     else if(100-tools[slot].y>= number){
+        tools[slot].x  = item;
         tools[slot].y += number;
         reject = 0;
         return 0;
     }  
     else{
+        //tools[slot].x  = item;
+        
         int rest = tools[slot].y+number-100;
+        tools[slot].y  = 100;
         reject = AddToSlotsAmount(item, rest, true);
         return rest;
     }

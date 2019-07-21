@@ -19,6 +19,7 @@ public class ground : MonoBehaviour
     public Vector2 point;
     public float gravityAngle = 20f;
     Rigidbody2D rb;
+    public follow[] ikStuff;
     
     // Start is called before the first frame update
     void Start()
@@ -42,6 +43,11 @@ public class ground : MonoBehaviour
         point = hit.point;
         if(grounded != g){
             grounded = g;
+            foreach(follow f in ikStuff){
+                f.enabled = !grounded;
+            }
+            
+            
             if(grounded){
                 superGroundedCkeck = rayLength;
                 foreach(Collider2D c in deactivate){
@@ -61,7 +67,13 @@ public class ground : MonoBehaviour
             }
         }
         if(grounded){
-            superGrounded = hit.distance<= superGroundedCkeck;
+            bool sG = hit.distance<= superGroundedCkeck;
+            if(sG != superGrounded){
+                superGrounded = sG;
+                foreach(follow f in ikStuff){
+                    f.enabled = !superGrounded;
+                }
+            }
             if(superGrounded){
                 superGroundedCkeck = rayLength;
                 foreach(Collider2D c in deactivate){
@@ -80,6 +92,7 @@ public class ground : MonoBehaviour
                     c.enabled = false;
                 }
             }
+            
             //rb.angularVelocity = 0;
             //rb.rotation  = Mathf.Atan2(hit.normal.x,hit.normal.y)*Mathf.Rad2Deg;
             

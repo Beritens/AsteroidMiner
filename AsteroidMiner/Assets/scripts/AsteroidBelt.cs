@@ -14,9 +14,11 @@ public class AsteroidBelt : MonoBehaviour
     public float jiggleRoom = 0.25f;
     public int loadDistance = 2;
     public float unloadDistance = 60f;
+    public float itemUnload = 120f;
     items items;
     public Dictionary<Vector2Int,List<Object>> sectors = new Dictionary<Vector2Int, List<Object>>();
     public List<Vector2Int> sectorsToSave = new List<Vector2Int>();
+    public List<Transform> itemsInWorld = new List<Transform>();
     
     public GameObject[] AsteroidObjects;
     public Vector2 sizeMultiplierRange;
@@ -24,18 +26,16 @@ public class AsteroidBelt : MonoBehaviour
     [System.Serializable]
     public struct Object
     {
-        public Object(Vector2 pos, int ty, float rot, float si,bool ast){
+        public Object(Vector2 pos, int ty, float rot, float si){
             position = new float[2]{pos.x,pos.y};
             type = ty;
             rotation = rot;
             size = si;
-            asteroid = ast;
         }
         public float[] position;
         public int type;
         public float rotation;
         public float size;
-        public bool asteroid;
     }
     void Start()
     {
@@ -64,8 +64,8 @@ public class AsteroidBelt : MonoBehaviour
     Vector2Int previousPlayerSector;
     bool start = true;
     void loadSectors(){
-        if(player.position.magnitude < 10900)
-            return;
+        // if(player.position.magnitude < 10900)
+        //     return;
         Vector2Int playerSector = new Vector2Int(Mathf.FloorToInt(player.position.x/sectorSize),Mathf.FloorToInt(player.position.y/sectorSize));
         if(start || playerSector != previousPlayerSector){
             start = false;
@@ -90,9 +90,20 @@ public class AsteroidBelt : MonoBehaviour
                     }
                 }
             }
+            dealWithItems();
         }
 
         previousPlayerSector = playerSector;
+    }
+    void dealWithItems(){
+        foreach(Transform t  in itemsInWorld){
+            if(Vector2.Distance(t.position,player.position) > itemUnload){
+                t.gameObject.SetActive(false);
+            }
+            else{
+                t.gameObject.SetActive(true);
+            }
+        }
     }
     //List<Vector2> currentlyConstructingLOL = new List<Vector2>(); //falls Sector geladen wird während anderer Thread ihn gerade generiert
     void loadSector(Vector2Int pos){
@@ -125,7 +136,7 @@ public class AsteroidBelt : MonoBehaviour
                 float perlin = Mathf.PerlinNoise(seed+xcord*noiseScale*0.9876f/sectorSize,seed+ycord*noiseScale*0.9876f/sectorSize);
                 if((float)rand.NextDouble()<density){//perlin>(1-0.5f*density) || perlin < 0.4f*density){
 
-                    Object ast = new Object(new Vector2(x*scale,y*scale)+new Vector2((float)rand.NextDouble()-0.5f,(float)rand.NextDouble()-0.5f)*2f*jiggleRoom,rand.Next(0,AsteroidObjects.Length),(float)rand.NextDouble()*360,(float)rand.NextDouble()*(sizeMultiplierRange.y-sizeMultiplierRange.x)+sizeMultiplierRange.x,true);
+                    Object ast = new Object(new Vector2(x*scale,y*scale)+new Vector2((float)rand.NextDouble()-0.5f,(float)rand.NextDouble()-0.5f)*2f*jiggleRoom,rand.Next(0,AsteroidObjects.Length),(float)rand.NextDouble()*360,(float)rand.NextDouble()*(sizeMultiplierRange.y-sizeMultiplierRange.x)+sizeMultiplierRange.x);
                     astros.Add(ast);
                 }
             }
@@ -148,16 +159,15 @@ public class AsteroidBelt : MonoBehaviour
         sector.transform.position = (Vector2)pos*sectorSize;
         for(int i = 0; i < objects.Count; i++){
             
-            GameObject gm = null;
-            if(objects[i].asteroid){
-                GameObject[] list = AsteroidObjects;
-                gm = GameObject.Instantiate(list[objects[i].type],(Vector2)sector.transform.position+new Vector2(objects[i].position[0],objects[i].position[1]),Quaternion.identity,sector.transform);
-            }
-            else{
-                gm = items.DropItem(objects[i].type,(Vector2)sector.transform.position+new Vector2(objects[i].position[0],objects[i].position[1])).gameObject;
-                gm.transform.parent = sector.transform;
+            // if(objects[i].asteroid){
+            GameObject[] list = AsteroidObjects;
+            GameObject gm = GameObject.Instantiate(list[objects[i].type],(Vector2)sector.transform.position+new Vector2(objects[i].position[0],objects[i].position[1]),Quaternion.identity,sector.transform);
+            // }
+            // else{
+            //     gm = items.DropItem(objects[i].type,(Vector2)sector.transform.position+new Vector2(objects[i].position[0],objects[i].position[1])).gameObject;
+            //     gm.transform.parent = sector.transform;
 
-            }
+            // }
             gm.GetComponent<Rigidbody2D>().rotation = objects[i].rotation;
             gm.transform.localScale *=objects[i].size; 
             
@@ -214,22 +224,25 @@ public class AsteroidBelt : MonoBehaviour
                 sectorsToSave.Add(sectorKey);
             }
             if(spawn){
-                GameObject gm = null;
-                if(obj.asteroid){
-                    GameObject[] list = AsteroidObjects;
-                    gm = GameObject.Instantiate(list[obj.type],(Vector2)sector.transform.position+new Vector2(obj.position[0],obj.position[1]),Quaternion.identity,sector.transform);
-                }
-                else{
-                    gm = items.DropItem(obj.type,(Vector2)sector.transform.position+new Vector2(obj.position[0],obj.position[1])).gameObject;
-                    gm.transform.parent = sector.transform;
-
-                }
+                GameObject[] list = AsteroidObjects;
+                GameObject gm = GameObject.Instantiate(list[obj.type],(Vector2)sector.transform.position+new Vector2(obj.position[0],obj.position[1]),Quaternion.identity,sector.transform);
+                
                 gm.GetComponent<Rigidbody2D>().rotation = obj.rotation;
                 gm.transform.localScale *=obj.size; 
             }
             
         }
             
+    }
+    public void AddItem(int item, Vector2 position, float rotation, float scale){
+        Transform i = items.DropItem(item,position);
+        i.eulerAngles = new Vector3(0,0,rotation);
+        i.localScale = Vector3.one * scale;
+        itemsInWorld.Add(i);
+    }
+    public void DeleteItem(Transform i){
+        itemsInWorld.Remove(i);
+        Destroy(i.gameObject);
     }
 
     //threading 

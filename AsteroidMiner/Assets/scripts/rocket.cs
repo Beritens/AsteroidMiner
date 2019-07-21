@@ -12,12 +12,15 @@ public class rocket : selectable
     public Vector2 upEngine;
     public Vector2 rightEngine;
     public Vector2 leftEngine;
+    public Vector2 downEngine;
     public float steeringAngle;
     public float speed;
+    public float breakSpeed;
     public float steeringSpeed;
     public GameObject rightFire;
     public GameObject leftFire;
     public GameObject upFire;
+    public GameObject downFire;
     Camera cam;
     Transform background;
     public ParticleSystem grind;
@@ -63,22 +66,24 @@ public class rocket : selectable
                 Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
                 bool preferRight = transform.InverseTransformPoint(mousePos).x >= 0;
                 Vector2 exitDir = preferRight? transform.right:-transform.right;
-                if(!CheckExit(exitDir)){
-                    if(CheckExit(exitDir *= -1)){
+                if(!CheckExit(exitDir,2.5f)){
+                    if(CheckExit(exitDir * -1,2.5f)){
+                        Debug.Log("eyyyy");
                         exitDir *= -1;
                     }
                     else{
-                        if(CheckExit(transform.up)){
+                        if(CheckExit(transform.up,5)){
                             exitDir = transform.up*3;
                         }
                         else{
-                            exitDir = -transform.up*3;
+                            exitDir = -transform.up*2;
                         }
                     }
                 }
+                Debug.Log(exitDir);
                 player.gameObject.SetActive(true);
                 player.parent = null;
-                player.position = (Vector2)transform.position +(exitDir* exit);
+                player.position = (Vector2)transform.position +(Vector2)transform.up+(exitDir* exit);
                 cam.orthographicSize = 5;
                 player.up = transform.up;
                 background.localScale = new Vector3(1,1,1);
@@ -86,20 +91,15 @@ public class rocket : selectable
             }
         }
     }
-    bool CheckExit(Vector2 direction){
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position,transform.right * direction,2.5f);
-        bool h= false;
+    bool CheckExit(Vector2 direction,float dist){
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position+transform.up, direction,dist);
         foreach(RaycastHit2D hit  in hits){
             if(hit.collider != null && hit.transform != transform){
-                h = true;
-                break;
+                
+                return false;
             }
         }
-        if(!h)
-            return true;
-        else{
-            return false;
-        }
+        return true;
     }
 
     /// <summary>
@@ -108,16 +108,23 @@ public class rocket : selectable
     void FixedUpdate()
     {
         if(active){
-            float y = Mathf.Clamp01(Input.GetAxisRaw("Vertical"));
+            float y = Input.GetAxisRaw("Vertical");
             float x = Input.GetAxisRaw("Horizontal");
-            if(y!= 0)
+            if(y> 0){
+                rb.AddForceAtPosition(transform.up*speed *y,transform.TransformPoint(upEngine));
                 upFire.SetActive(true);
-            else   
+                downFire.SetActive(false);
+            } 
+            else if(y<0){
+                rb.AddForceAtPosition(transform.up*breakSpeed *y,transform.TransformPoint(downEngine));
                 upFire.SetActive(false);
-            rb.AddForceAtPosition(transform.up*speed*y,transform.TransformPoint(upEngine));
-            Debug.DrawRay(transform.TransformPoint(rightEngine),transform.TransformDirection(right));
-            Debug.DrawRay(transform.TransformPoint(leftEngine),transform.TransformDirection(left));
-            Debug.DrawRay(transform.TransformPoint(upEngine),transform.up);
+                downFire.SetActive(true);
+            }   
+            else{
+                upFire.SetActive(false);
+                downFire.SetActive(false);
+            }
+                
 
             if(x>0){
                 rb.AddForceAtPosition(transform.TransformDirection(left)*steeringSpeed*x,transform.TransformPoint(leftEngine));

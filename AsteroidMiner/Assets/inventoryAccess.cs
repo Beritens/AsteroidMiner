@@ -7,13 +7,18 @@ using TMPro;
 
 public class inventoryAccess : window
 {
+    public toolManager toolManager;
     public Transform slotsContainer;
     public Transform toolsContainer;
     public Transform activeContainer;
+    public Transform toolsDisplay;
+    public Color toolDisplayColor;
     Vector2Int inHand;
     GameObject HandObj;
     public GameObject slotPre;
     inventory inv;
+    int selectedToolSlot = 0;
+    
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
@@ -21,6 +26,7 @@ public class inventoryAccess : window
     void Start()
     {
         inv = inventory.instance;
+        SelectTool(true);
     }
     void Update()
     {
@@ -31,15 +37,53 @@ public class inventoryAccess : window
         else if(Input.GetButtonDown("Cancel") && Open || Input.GetButtonDown("inventory") && Open){
             close();
         }
+        if(Open){
+            if(inHand.y != 0){
+                if(Input.GetButtonDown("Fire2")){
+                    inHand.y--;
+                    PlaceItem(new Vector2Int(inHand.x,1),getMouseSlot());
+                    UpdateHand();
+                }
+            }
+        }
+        if(Input.GetAxis("Mouse ScrollWheel") != 0){
+            SelectTool(false);
+            selectedToolSlot= (int)Mathf.Repeat(selectedToolSlot-(int)(10*Input.GetAxis("Mouse ScrollWheel")),4);
+            SelectTool(true);
+        }
+    }
+    void SelectTool(bool select){
+        toolsDisplay.GetChild(selectedToolSlot).GetComponent<Image>().color = select? toolDisplayColor: new Color(0,0,0,0);
+        Vector2Int item = inv.GetTool(selectedToolSlot);
+        if(item.y == 0){
+            toolManager.deselectTool();
+            return;
+        }
+        if(select){
+            toolManager.selectTool(item.x);
+        }
+        else{
+            toolManager.deselectTool();
+        }
     }
     void UpdateInventory(){
         uSlots();
+        uTools();
     }
     void uSlots(){
         Vector2Int[] slots = inv.GetSlots();
         for(int i = 0; i<slots.Length; i++){
             SetItem(slots[i],slotsContainer.GetChild(i));
         }
+    }
+    void uTools(){
+        Vector2Int[] tools = inv.GetTools();
+        for(int i = 0; i<tools.Length; i++){
+            SetItem(tools[i],toolsContainer.GetChild(i));
+            SetItem(tools[i],toolsDisplay.GetChild(i));
+        }
+        SelectTool(false);
+        SelectTool(true);
     }
     void SetItem(Vector2Int slot,Transform obj){
         if(slot.y == 0){
@@ -83,7 +127,64 @@ public class inventoryAccess : window
         }
     }
     public void releaseOnHand(){
-        PointerEventData pointerData = new PointerEventData (EventSystem.current)
+        Transform sloty = getMouseSlot();
+        if(sloty != null){
+            PlaceItem(inHand,sloty);
+            inHand.y = 0;
+            UpdateHand();  
+                
+            
+        }
+        else{
+            inv.AddToSlotsAmount(inHand.x,inHand.y,true);
+            inHand.y = 0;
+            UpdateHand();
+            uSlots();
+        }
+        
+    }
+    void UpdateHand(){
+        if(inHand.y == 0){
+            inHand = Vector2Int.zero;
+            Destroy(HandObj);
+        }
+        else{
+            HandObj.GetComponentInChildren<TextMeshProUGUI>().text = inHand.y.ToString();
+        }
+    }
+    private void PlaceItem(Vector2Int item, Transform slot){
+        int i = slot.GetSiblingIndex();
+        int re = item.y ;//inv.AddToSlotsAmount(inHand.x,inHand.y,i);
+        Transform p = slot.parent;
+        int o = 0;
+        if(p == slotsContainer){
+            re = inv.AddToSlotsAmount(item.x,item.y,i,out o);
+        }
+        else if(p == toolsContainer){
+            re = inv.AddToToolsAmount(item.x,item.y,i,out o);
+        }
+        if(re != item.y){
+            if(re >0){
+                uSlots();
+            }
+            else{
+                if(p == slotsContainer){
+                    SetItem(inv.GetSlot(i),slotsContainer.GetChild(i));
+                }
+                else if(p == toolsContainer){
+                    uTools();
+                }
+            }
+            
+            
+        }
+        else{
+            inv.AddToSlotsAmount(item.x,item.y,true);
+            uSlots();
+        }
+    }
+    private Transform getMouseSlot(){
+         PointerEventData pointerData = new PointerEventData (EventSystem.current)
          {
              pointerId = -1,
          };
@@ -94,40 +195,9 @@ public class inventoryAccess : window
         foreach(RaycastResult r in results){
             slot s = r.gameObject.GetComponent<slot>();
             if(s != null && s.onHand == false){
-                int i = s.gameObject.transform.GetSiblingIndex();
-                int re = 0 ;//inv.AddToSlotsAmount(inHand.x,inHand.y,i);
-                Transform p = r.gameObject.transform.parent;
-                int o = 0;
-                if(p == slotsContainer){
-                    re = inv.AddToSlotsAmount(inHand.x,inHand.y,i,out o);
-                }
-                else if(p == toolsContainer){
-                    re = inv.AddToToolsAmount(inHand.x,inHand.y,i,out o);
-                }
-                if(re == 0){
-                    Destroy(HandObj);
-                    inHand = Vector2Int.zero;
-                    if(p == slotsContainer){
-                        SetItem(inv.GetSlot(i),slotsContainer.GetChild(i));
-                    }
-                    else if(p == toolsContainer){
-                        SetItem(inv.GetTool(i),toolsContainer.GetChild(i));
-                     }
-                    
-                }
-                else if(re == inHand.y){
-                    inv.AddToSlotsAmount(inHand.x,inHand.y,true);
-                    Destroy(HandObj);
-                    inHand = Vector2Int.zero;
-                    uSlots();
-                }
-                return;
-                
+                return s.transform;
             }
         }
-        inv.AddToSlotsAmount(inHand.x,inHand.y,true);
-        Destroy(HandObj);
-        inHand = Vector2Int.zero;
-        uSlots();
+        return null;
     }
 }
