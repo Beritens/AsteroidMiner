@@ -10,7 +10,7 @@ public class item : ScriptableObject
     public float resellValue;
     public Sprite sprite;
     public GameObject prefab;
-    public int toolType;
+    //public int toolType;
     //public float[] values;
     public bool stackable;
     [Tooltip("0 = normal, 1 = tool, 2 = active")]

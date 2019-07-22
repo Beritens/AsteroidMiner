@@ -20,11 +20,18 @@ public class ground : MonoBehaviour
     public float gravityAngle = 20f;
     Rigidbody2D rb;
     public follow[] ikStuff;
+    bool[] lockIks = new bool[4];
     
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+    }
+    public void lockIk(int i, bool yes){
+        lockIks[i]= yes;
+        if(superGrounded){
+            ikStuff[i].enabled = yes;
+        }
     }
 
     // Update is called once per frame
@@ -43,8 +50,11 @@ public class ground : MonoBehaviour
         point = hit.point;
         if(grounded != g){
             grounded = g;
-            foreach(follow f in ikStuff){
-                f.enabled = !grounded;
+            for(int i = 0; i<ikStuff.Length; i++){
+                ikStuff[i].enabled = !grounded;
+                if(grounded && lockIks[i]){
+                    ikStuff[i].enabled = true;
+                }
             }
             
             
@@ -58,6 +68,9 @@ public class ground : MonoBehaviour
                 }
             }
             else{
+                foreach(follow f in ikStuff){
+                    f.enabled = true;
+                }
                 foreach(Collider2D c in deactivate){
                     c.enabled = true;
                 }
@@ -70,8 +83,11 @@ public class ground : MonoBehaviour
             bool sG = hit.distance<= superGroundedCkeck;
             if(sG != superGrounded){
                 superGrounded = sG;
-                foreach(follow f in ikStuff){
-                    f.enabled = !superGrounded;
+                for(int i = 0; i<ikStuff.Length; i++){
+                    ikStuff[i].enabled = !superGrounded;
+                    if(grounded && lockIks[i]){
+                        ikStuff[i].enabled = true;
+                    }
                 }
             }
             if(superGrounded){

@@ -15,4 +15,7 @@ public class tool : MonoBehaviour
     public virtual void OnSwitchSide(bool rightori){
 
     }
+    public void lockIk(int i, bool yes){
+        ground.lockIk(i,yes);
+    }
 }

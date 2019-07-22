@@ -110,6 +110,7 @@ public class inventoryAccess : window
             createDrag(sl, slot);
             inv.RemoveFromTools(slot);
             SetItem(inv.GetTool(slot),toolsContainer.GetChild(slot));
+            SetItem(inv.GetTool(slot),toolsDisplay.GetChild(slot));
             
         }
     }

@@ -64,6 +64,7 @@ public class toolManager : MonoBehaviour
         currentTool = GameObject.Instantiate(items.itemObjects[item].prefab,transform.position,Quaternion.identity);
         currentToolTool = currentTool.GetComponent<tool>();
         currentToolTool.instantiate(this,item);
+        
         ToolspriteRenderer = currentTool.GetComponentsInChildren<SpriteRenderer>();
         if(rightOri){
             right();
@@ -71,6 +72,7 @@ public class toolManager : MonoBehaviour
         else{
             left();
         }
+        currentTool.transform.localScale = Vector3.one;
     }
     public void deselectTool(){
          BackgroundArm.sprite = backgroundArm;

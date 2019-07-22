@@ -72,8 +72,8 @@ public class pickaxe : tool
         toolManager.FocusBackground.GetComponent<DistanceJoint2D>().enabled = true;
         
         if(animatePickIsRunning){
-            IKStuffOnGround(rightori? 2:3, true);
-            IKStuffOnGround(rightori? 3:2, false);
+            lockIk(rightori? 2:3, true);
+            lockIk(rightori? 3:2, false);
             toolManager.focus.GetComponent<returnToPos>().enabled = false;
             toolManager.focus.GetComponent<DistanceJoint2D>().enabled = false;
         }
@@ -135,7 +135,7 @@ public class pickaxe : tool
         animatePickIsRunning = true;
         toolManager.focus.GetComponent<returnToPos>().enabled = false;
         toolManager.focus.GetComponent<DistanceJoint2D>().enabled = false;
-        IKStuffOnGround(toolManager.rightOri? 2:3, true);
+        lockIk(toolManager.rightOri? 2:3, true);
         float animtime = 0;
             
         while(animtime <= raiseDuration){
@@ -161,8 +161,8 @@ public class pickaxe : tool
             if(!animatePickIsRunning){
                 toolManager.focus.GetComponent<returnToPos>().enabled = true;
                 toolManager.focus.GetComponent<DistanceJoint2D>().enabled = true;
-                IKStuffOnGround(2, false);
-                IKStuffOnGround(3, false);
+                lockIk(2, false);
+                lockIk(3, false);
             }
             
         }
@@ -201,10 +201,10 @@ public class pickaxe : tool
         }
         
     }
-    void IKStuffOnGround(int fol, bool enabled){
-        if(ground.superGrounded){
-            ground.ikStuff[fol].enabled = enabled;
-        }
+    // void IKStuffOnGround(int fol, bool enabled){
+    //     if(ground.superGrounded){
+    //         ground.ikStuff[fol].enabled = enabled;
+    //     }
 
-    }
+    // }
 }
