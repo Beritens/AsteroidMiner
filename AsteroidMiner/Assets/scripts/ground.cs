@@ -100,6 +100,7 @@ public class ground : MonoBehaviour
                 }
             }
             else{
+                superGrounded = false;
                 superGroundedCkeck = supersuperGroundedLength;
                 foreach(Collider2D c in deactivate){
                     c.enabled = true;

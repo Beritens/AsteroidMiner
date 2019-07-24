@@ -107,8 +107,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1862466161867077942}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.768, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_LocalPosition: {x: 3.59, y: 0, z: 0}
+  m_LocalScale: {x: 4.2168, y: 6.789048, z: 7.028}
   m_Children:
   - {fileID: 1605417624502715544}
   - {fileID: 8987230910969187160}
@@ -237,7 +237,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1887613398719319255}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.356, z: 0}
+  m_LocalPosition: {x: -0, y: -0.378, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7728073382226804449}
@@ -267,7 +267,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.34, y: 0.18}
+  m_Size: {x: 0.25, y: 0.12}
   m_EdgeRadius: 0
 --- !u!1 &2176171782666946350
 GameObject:
@@ -5128,8 +5128,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6142155948676914475}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.768, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_LocalPosition: {x: 3.59, y: 0, z: 0}
+  m_LocalScale: {x: 4.2168, y: 6.789048, z: 7.028}
   m_Children: []
   m_Father: {fileID: 4887301521487008269}
   m_RootOrder: 4
@@ -5266,7 +5266,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8355578222021325042}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.042278, y: 0, z: -8.396874}
+  m_LocalPosition: {x: 6.67, y: 0, z: -8.396874}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4887301521487008269}
@@ -5283,7 +5283,7 @@ GameObject:
   - component: {fileID: 4887301521487008269}
   - component: {fileID: 8967489641473461068}
   m_Layer: 0
-  m_Name: drill
+  m_Name: superDrill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5321,22 +5321,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dfd2dbace3a8614aa7faeaa9c6cf795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolLength: 1.042278
+  toolLength: 6.67
   sprites:
   - {fileID: 1601048178769626925}
   - {fileID: 7403006382378263116}
   - {fileID: 2488746142549348582}
-  damagePerSecond: 1
+  damagePerSecond: 10000
   drillHead: {fileID: 1748760376530815181}
-  drillSpeed: 1
+  drillSpeed: 100
   particles:
   - {fileID: 6312955969214410549}
   - {fileID: 9031399026615794425}
   head: {fileID: 7728073382226804449}
   testHead: {fileID: 7220063001770381378}
   rod: {fileID: 6267496593728124475}
-  extendable: 1
-  extendSpeed: 0.5
+  extendable: 10
+  extendSpeed: 2
   contactFilter:
     useTriggers: 1
     useLayerMask: 1
@@ -5351,7 +5351,7 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  drillRayArea: 0.3
+  drillRayArea: 3.4
 --- !u!1 &8948719990058164694
 GameObject:
   m_ObjectHideFlags: 0

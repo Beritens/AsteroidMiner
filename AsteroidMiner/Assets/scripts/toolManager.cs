@@ -14,6 +14,9 @@ public class toolManager : MonoBehaviour
     public SpriteRenderer BackgroundArm;
     public Sprite foregroundArmHolding;
     public Sprite backgroundArmHolding;
+    public SpriteRenderer backgroundPalm;
+    public SpriteRenderer foregroundThumb;
+
     public look look;
     public Transform handForeground;
     public Transform handBackground;
@@ -26,7 +29,6 @@ public class toolManager : MonoBehaviour
     public tool currentToolTool;
     [HideInInspector]
     public bool rightOri = true;
-    SpriteRenderer[] ToolspriteRenderer;
     items items;
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -50,28 +52,29 @@ public class toolManager : MonoBehaviour
         if(this.enabled == false)
             return;
         rightOri = rightori;
-        if(currentTool != null){
-            currentToolTool.OnSwitchSide(rightori);
-        }
+        
         if(rightori){
             right();
         }
         else{
             left();
         }
+        if(currentTool != null){
+            currentToolTool.OnSwitchSide(rightori);
+        }
     }
+    
     public void selectTool(int item){
         currentTool = GameObject.Instantiate(items.itemObjects[item].prefab,transform.position,Quaternion.identity);
         currentToolTool = currentTool.GetComponent<tool>();
-        currentToolTool.instantiate(this,item);
         
-        ToolspriteRenderer = currentTool.GetComponentsInChildren<SpriteRenderer>();
         if(rightOri){
             right();
         }
         else{
             left();
         }
+        currentToolTool.instantiate(this,item);
         currentTool.transform.localScale = Vector3.one;
     }
     public void deselectTool(){
@@ -88,9 +91,9 @@ public class toolManager : MonoBehaviour
         currentTool.transform.localRotation = Quaternion.identity;
         ForegroundArm.sprite = foregroundArm;
         BackgroundArm.sprite = backgroundArmHolding;
-        foreach(SpriteRenderer s in ToolspriteRenderer){
-            s.sortingOrder = orderInLayer2;
-        }
+        foregroundThumb.enabled = false;
+        backgroundPalm.enabled = true;
+         currentToolTool.changeSpriteOrder(orderInLayer2,false);
         
 
         
@@ -104,9 +107,9 @@ public class toolManager : MonoBehaviour
         currentTool.transform.localRotation = Quaternion.identity;
         BackgroundArm.sprite = backgroundArm;
         ForegroundArm.sprite = foregroundArmHolding;
-        foreach(SpriteRenderer s in ToolspriteRenderer){
-            s.sortingOrder = orderInLayer1;
-        }
+        foregroundThumb.enabled = true;
+        backgroundPalm.enabled = false;
+        currentToolTool.changeSpriteOrder(orderInLayer1,true);
 
         
     }

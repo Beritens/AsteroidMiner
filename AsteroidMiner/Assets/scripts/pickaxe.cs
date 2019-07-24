@@ -4,22 +4,18 @@ using UnityEngine;
 
 public class pickaxe : tool
 {
-    Camera cam;
     select select;
     public Color selectColor;
     public float strenth =10f;
-    Transform foregroundShoulder;
-    Transform backgroundShoulder;
     Vector2 localShoulderPos;
     ParticleSystem pickaxeHit;
 
     // Start is called before the first frame update
     void Start()
     {
-        foregroundShoulder = GameObject.Find("foregroundShoulder").transform;
-        backgroundShoulder = GameObject.Find("backgroundShoulder").transform;
+        //foregroundShoulder = GameObject.Find("foregroundShoulder").transform;
+        //backgroundShoulder = GameObject.Find("backgroundShoulder").transform;
         //look = GetComponent<look>();
-        cam = Camera.main;
         select = GameObject.FindObjectOfType<select>().GetComponent<select>();
         pickaxeHit = toolManager.effectsContainer.GetChild(0).GetComponent<ParticleSystem>();
         pickaxeHit.gameObject.SetActive(true);

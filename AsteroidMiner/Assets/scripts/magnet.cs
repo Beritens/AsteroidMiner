@@ -15,7 +15,8 @@ public class magnet : MonoBehaviour
         foreach(Collider2D col in colliders){
             Rigidbody2D rb = col.GetComponent<Rigidbody2D>();
             if(rb != null){
-                rb.AddForce(((Vector2)transform.position-rb.position).normalized*strength);
+                float dist = Vector2.Distance(transform.position,rb.position);
+                rb.AddForce(((Vector2)transform.position-rb.position).normalized*(strength/dist));
             }
         }
     }

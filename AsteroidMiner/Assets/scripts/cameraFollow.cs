@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class follow : MonoBehaviour
+public class cameraFollow : MonoBehaviour
 {
     public Transform target;
     public float smoothTime;
@@ -33,8 +33,5 @@ public class follow : MonoBehaviour
         //transform.position = Vector3.SmoothDamp(transform.position,target.position+offset,ref velocity, smoothTime);
         transform.position = target.position+offset;
         //transform.position = (Vector3)Vector2.Lerp(transform.position,target.position, lerp*Time.deltaTime)+offset;
-    }
-    public void updateIt(){
-        transform.position = target.position+offset;
     }
 }
