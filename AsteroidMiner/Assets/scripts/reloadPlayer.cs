@@ -5,7 +5,8 @@ using UnityEngine;
 public class reloadPlayer : MonoBehaviour
 {
     public Transform[] limbs;
-    public void reload(SaveDataPlayer sDP){
+    public void reload(SaveDataPlayer sDP, List<Transform> objects){
+        
         Rigidbody2D player = GetComponent<Rigidbody2D>(); 
         Vector2 pos = new Vector2(sDP.position[0],sDP.position[1]);
         Vector2 vel = new Vector2(sDP.velocity[0],sDP.velocity[1]);
@@ -24,6 +25,13 @@ public class reloadPlayer : MonoBehaviour
             rb.velocity = player.velocity;
             //Debug.Log(rb.velocity + " "+ player.velocity);
             //rb.velocity = player.GetPointVelocity(rTP.defaultPosObj.position);
+        }
+        if(sDP.parent >= 0){
+            IparentForPlayer par = objects[sDP.parent].GetComponent<IparentForPlayer>();
+            if(par != null)
+            {
+                par.activateIt();
+            }
         }
     }
 }

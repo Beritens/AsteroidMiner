@@ -27,4 +27,8 @@ public class items : MonoBehaviour
         it.GetComponent<ressource>().item = item;
         return it.transform;
     }
+    public Transform spawnObject(int item, Vector2 position){
+        GameObject ob = GameObject.Instantiate(itemObjects[item].prefab,position,Quaternion.identity);
+        return ob.transform;
+    }
 }

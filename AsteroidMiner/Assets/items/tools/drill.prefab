@@ -5326,7 +5326,7 @@ MonoBehaviour:
   - {fileID: 1601048178769626925}
   - {fileID: 7403006382378263116}
   - {fileID: 2488746142549348582}
-  damagePerSecond: 1
+  damagePerSecond: 20
   drillHead: {fileID: 1748760376530815181}
   drillSpeed: 1
   particles:
@@ -5335,7 +5335,7 @@ MonoBehaviour:
   head: {fileID: 7728073382226804449}
   testHead: {fileID: 7220063001770381378}
   rod: {fileID: 6267496593728124475}
-  extendable: 1
+  extendable: 5
   extendSpeed: 0.5
   contactFilter:
     useTriggers: 1

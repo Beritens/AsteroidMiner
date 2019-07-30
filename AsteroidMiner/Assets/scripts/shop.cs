@@ -1,24 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro;
 public class shop : window
 {
     public int[] products;
     public Transform productPanel;
     public GameObject prefab;
     inventory inv;
-    /// <summary>
-    /// Start is called on the frame when a script is enabled just before
-    /// any of the Update methods is called the first time.
-    /// </summary>
+    public Button buyButton;
+    public Button sellButton;
+    public TextMeshProUGUI speechBubble;
+    [TextArea]
+    public string[] welcomes;
+    [TextArea]
+    public string[] buySpeech;
+    [TextArea]
+    public string[] sellSpeech;
+    [TextArea]
+    public string[] thx;
     void Start()
     {
         inv = inventory.instance;
     }
+    public void switchBuy(){
+        sellButton.interactable = true;
+        buyButton.interactable = false;
+        speechBubble.text = buySpeech[Random.Range(0,buySpeech.Length)];
+        loadProducts();
+    }
+    public void switchSell(){
+        sellButton.interactable = false;
+        buyButton.interactable = true;
+        speechBubble.text = sellSpeech[Random.Range(0,sellSpeech.Length)];
+        loadInventory();
+    }
     public override void pressE(){
         open();
         loadProducts();
+        speechBubble.text = welcomes[Random.Range(0,welcomes.Length)];
+        sellButton.interactable = true;
+        buyButton.interactable = false;
     }
     void loadProducts(){
         foreach(Transform child in productPanel){
@@ -26,13 +49,32 @@ public class shop : window
         }
         foreach(int i in products){
             GameObject g = GameObject.Instantiate(prefab,Vector2.zero,Quaternion.identity,productPanel);
-            g.GetComponent<shopProduct>().setVariables(items.instance.itemObjects[i],true);
+            g.GetComponent<shopProduct>().setVariables(items.instance.itemObjects[i],true,1);
         }
     }
-    public void productStuff(item i,bool buy){
-        if(buy){
+    void loadInventory(){
+        Vector2Int[] invSlots = inv.GetSlots();
+        foreach(Transform child in productPanel){
+            Destroy(child.gameObject);
+        }
+        for(int i = 0; i < invSlots.Length; i++){
+            GameObject g = GameObject.Instantiate(prefab,Vector2.zero,Quaternion.identity,productPanel);
+            shopProduct sP = g.GetComponent<shopProduct>();
+            sP.slot = i;
+            sP.setVariables(items.instance.itemObjects[invSlots[i].x],false, invSlots[i].y);
             
-            inv.AddToSlots(items.instance.GetIndex(i));
         }
     }
+    public void buy(item i,bool buy){
+        speechBubble.text = thx[Random.Range(0,thx.Length)];
+        bool ok = inv.AddToSlots(items.instance.GetIndex(i));
+        if(!ok){
+            speechBubble.text = "your inventory is full you stupid piece of shit";
+        }
+    }
+    public void sell(int slot,Transform product){
+        speechBubble.text = thx[Random.Range(0,thx.Length)];
+        inv.RemoveFromSlots(slot);
+        Destroy(product.gameObject);
+    }   
 }

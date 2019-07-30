@@ -86,14 +86,16 @@ public class drill : tool
             drillHead.SetFloat("speed",0);
         }
         Collider2D[] asteroids;
-        bool touching =GetTouching(out asteroids);
+        touching = GetTouching(out asteroids);
         bool h = GetTouchingHinten();
         float plus = (Mathf.Sign(targetExtend-currentExtend)*Time.deltaTime)/(extendSpeed*extendable);
         bool ok = true;
-        if(touching && !changeOldPos){
+        if(touching && !changeOldPos && switchWait == 0){
             float lenny = (transform.InverseTransformPoint(oldPosition).x-(toolLength+currentExtend+(plus*extendable)));
             if(lenny <0){
-                currentExtend += (lenny-((plus*extendable))); 
+                currentExtend = Mathf.Clamp(currentExtend+(lenny-((plus*extendable))),0,extendable); 
+                head.localPosition = Vector2.right*(defaultExtend+currentExtend);
+                rod.localScale =Vector2.one+ Vector2.up*(-0.9f+currentExtend);
                 ok = false;
             }
 
@@ -102,7 +104,6 @@ public class drill : tool
 
             float f = currentExtend/extendable;
             if(drilling){
-                Debug.Log(touching);
                 if((plus>0 && touching)||(plus<0 && h)){
                     ok = false;
                 }
@@ -198,16 +199,21 @@ public class drill : tool
             //Debug.DrawRay(shoulder.position,mouseDir*dist, Color.yellow,5);
             //Debug.DrawRay(shoulder.position,handDir*dist, Color.blue,5);
             
-            
-            for(int i = 0; i<5;i++){
+            bool anotherOne = true;
+            int i = 0;
+            while(anotherOne){
+                i++;
                 Vector2 rayDir =  ((mouseDir+handDir)/2).normalized;
                 RaycastHit2D hit = Physics2D.CircleCast((Vector2)shoulder.position+rayDir*(dist-drillRayArea),0.3f,rayDir,drillRayArea,contactFilter.layerMask);
+                bool hi = false;
                 if(hit.collider == null){
+                    hi = true;
                     handDir = rayDir;
                 }
                 else{
                     mouseDir = rayDir;
                 }
+                anotherOne = i<5 || (hi&& i<10);
             }
             Vector2 finalDir = ((mouseDir+handDir)/2).normalized;
             //Debug.DrawRay(shoulder.position,finalDir*dist, Color.green,5);

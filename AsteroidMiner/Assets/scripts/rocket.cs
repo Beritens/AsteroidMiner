@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class rocket : selectable
+public class rocket : selectable, IparentForPlayer
 {
     bool active = false;
     Transform player;
@@ -28,6 +28,12 @@ public class rocket : selectable
     public override void pressE(){
         if(Vector2.Distance(player.position,transform.position)>6f)
             return;
+        activate();
+
+    }
+    void activate(){
+        StartSTuff();
+            
         active = true;
         justNow = true;
         player.parent = transform;
@@ -35,7 +41,6 @@ public class rocket : selectable
         player.gameObject.SetActive(false);
         cam.orthographicSize = 25;
         background.localScale = new Vector3(5,5,1);
-
     }
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -43,7 +48,7 @@ public class rocket : selectable
     /// </summary>
     Vector2 right;
     Vector2 left;
-    void Start()
+    void StartSTuff()
     {
         player = GameObject.FindObjectOfType<look>().transform;
         rb = GetComponent<Rigidbody2D>();
@@ -52,6 +57,8 @@ public class rocket : selectable
         left = new Vector2(-right.x,right.y);
         cam = Camera.main;
         background = GameObject.Find("background").transform;
+        if(!saveOtherStuff.instance.transforms.Contains(transform))
+            saveOtherStuff.instance.transforms.Add(transform);
     }
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
@@ -68,7 +75,6 @@ public class rocket : selectable
                 Vector2 exitDir = preferRight? transform.right:-transform.right;
                 if(!CheckExit(exitDir,2.5f)){
                     if(CheckExit(exitDir * -1,2.5f)){
-                        Debug.Log("eyyyy");
                         exitDir *= -1;
                     }
                     else{
@@ -173,5 +179,10 @@ public class rocket : selectable
     void OnCollisionExit2D(Collision2D other)
     {
         grind.Stop();
+    }
+
+    public void activateIt()
+    {
+        activate();
     }
 }

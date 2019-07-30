@@ -17,12 +17,19 @@ public class shopProduct : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
     public Color press;
     Image im;
     bool over;
+    public int slot;
 
 
     public void OnPointerDown(PointerEventData eventData)
     {
         im.color = press;
-        shop.productStuff(i,buy);
+        if(buy){
+            shop.buy(i,buy);
+        }
+        else{
+            shop.sell(slot,transform);
+        }
+        
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -39,7 +46,12 @@ public class shopProduct : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
         im.color = col;
     }
 
-    public void setVariables(item i, bool buy){
+    public void setVariables(item i, bool buy, int count){
+        if(count == 0){
+            Destroy(gameObject);
+            return;
+        }
+
         this.i= i;
         this.buy = buy;
         im = GetComponent<Image>();
@@ -49,9 +61,13 @@ public class shopProduct : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
             price.text = i.cost.ToString();
         }
         else{
-            price.text = i.resellValue.ToString();
+            price.text = (i.resellValue*count).ToString();
         }
-        name.text = i.name;
+        if(count > 1){
+             name.text = count.ToString() + "x "+i.name;
+        }
+        else
+            name.text = i.name;
     }
 
     public void OnPointerUp(PointerEventData eventData)

@@ -47,10 +47,18 @@ public class AsteroidBelt : MonoBehaviour
     }
 
     public void load(SaveData data){
+        items = items.instance;
         SaveData.Objekte[] sects = data.sectors;
         foreach(SaveData.Objekte objs in sects){
             sectors.Add(new Vector2Int(objs.key[0],objs.key[1]),new List<Object>(objs.objs));
             sectorsToSave.Add(new Vector2Int(objs.key[0],objs.key[1]));
+        }
+        foreach(saveTransform it in data.items){
+            Debug.Log(items);
+            Transform drop = items.DropItem(it.item,new Vector2(it.position[0],it.position[1]));
+            drop.localScale = new Vector3(it.scale[0],it.scale[1],1);
+            drop.eulerAngles = new Vector3(0,0,it.rotation);
+            itemsInWorld.Add(drop);
         }
         seed = data.seed;
     }

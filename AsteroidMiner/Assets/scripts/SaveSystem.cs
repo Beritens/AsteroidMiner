@@ -27,7 +27,8 @@ public static class SaveSystem
             return null;
         }
     }
-    public static void SavePlayer(SaveDataPlayer sD, string path){
+    public static void SavePlayer(SaveDataPlayer sD, string name){
+        string path = Application.persistentDataPath+"/" + name +"Player.lol";
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream(path+";-;", FileMode.Create);
 
@@ -44,6 +45,31 @@ public static class SaveSystem
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
             SaveDataPlayer sD = (SaveDataPlayer)formatter.Deserialize(stream);
+            stream.Close();
+            return sD;
+        }
+        else{
+            return null;
+        }
+    }
+    public static void SaveObjects(SaveObjectData sD, string name){
+        string path = Application.persistentDataPath+"/" + name +"Objects.lol";
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream stream = new FileStream(path+";-;", FileMode.Create);
+
+        formatter.Serialize(stream,sD);
+        stream.Close();
+        if(File.Exists(path)){
+            File.Delete(path);
+        }
+        File.Move(path+";-;",path);
+    }
+    public static SaveObjectData loadObjects(string name){
+        string path = Application.persistentDataPath+"/" + name +"Objects.lol";
+        if(File.Exists(path)){
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+            SaveObjectData sD = (SaveObjectData)formatter.Deserialize(stream);
             stream.Close();
             return sD;
         }

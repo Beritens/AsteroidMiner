@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f05e652f46a36148ad1412590ad88fa, type: 3}
-  m_Name: superDrill
+  m_Name: rocket_0
   m_EditorClassIdentifier: 
-  name: superDrill
-  cost: 2000000
-  resellValue: 1000000
-  sprite: {fileID: 21300000, guid: 936e76edb5ec6c44191decde1510ad28, type: 3}
-  prefab: {fileID: 8646609997345979247, guid: 6017c91c8b631b248b5c774b45d0ccf3, type: 3}
+  name: rocket
+  cost: 100000
+  resellValue: 50000
+  sprite: {fileID: 21300000, guid: c087dfdf7151498448e16b25c64af0b7, type: 3}
+  prefab: {fileID: 5120241337898572357, guid: a13f502cae36493409789e0aca983e11, type: 3}
   stackable: 0
-  type: 1
+  type: 0

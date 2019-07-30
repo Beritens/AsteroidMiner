@@ -15,7 +15,13 @@ public class inventory : MonoBehaviour
     {
         instance = this;
     }
-    public void reload(float[] res){
+    public void reload(int[] slotItems, int[] slotCounts, int[] toolItems, int[] toolCounts){
+        for(int i = 0; i< slots.Length; i++){
+            slots[i] = new Vector2Int(slotItems[i],slotCounts[i]);
+        }
+        for(int i = 0; i< tools.Length; i++){
+            tools[i] = new Vector2Int(toolItems[i],toolCounts[i]);
+        }
         // ressourcesCount = res;
         // storage = 0;
         // for (int i = 0; i < res.Length; i++)
