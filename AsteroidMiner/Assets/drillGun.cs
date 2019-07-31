@@ -26,6 +26,16 @@ public class drillGun : tool
         toolManager.focus.GetComponent<DistanceJoint2D>().enabled = false;
         
     } 
+    /// <summary>
+    /// This function is called when the MonoBehaviour will be destroyed.
+    /// </summary>
+    void OnDestroy()
+    {
+        toolManager.FocusForeground.GetComponent<returnToPos>().enabled = true;
+        toolManager.FocusForeground.GetComponent<DistanceJoint2D>().enabled = true;
+        toolManager.FocusBackground.GetComponent<returnToPos>().enabled = true;
+        toolManager.FocusBackground.GetComponent<DistanceJoint2D>().enabled = true;
+    }
 
     // Update is called once per frame
     void LateUpdate()
@@ -55,11 +65,12 @@ public class drillGun : tool
         spawn = false;
         GameObject g = GameObject.Instantiate(projectile,position.position,Quaternion.identity);
         g.transform.up = transform.right* (toolManager.rightOri?1:-1);
-        drillProjectile gun = g.GetComponent<drillProjectile>();
-        gun.damage = damage;
+        drillProjectile dr = g.GetComponent<drillProjectile>();
+        dr.damage = damage;
         
-        gun.rb.velocity += player.velocity;
-        gun.rb.AddForce((Vector2)(g.transform.up*force),ForceMode2D.Impulse);
+        dr.rb.velocity += player.velocity;
+        dr.rb.AddForce((Vector2)(g.transform.up*force),ForceMode2D.Impulse);
+        dr.GetComponent<Animator>().SetFloat("speed",speed);
         anim.Play("reload");
     }
 }

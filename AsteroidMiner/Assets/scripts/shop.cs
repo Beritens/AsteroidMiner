@@ -66,13 +66,20 @@ public class shop : window
         }
     }
     public void buy(item i,bool buy){
+        bool okay = inv.AddMoney(-i.cost);
+        if(!okay){
+               speechBubble.text = "get some money!";
+               return;
+        }
         speechBubble.text = thx[Random.Range(0,thx.Length)];
         bool ok = inv.AddToSlots(items.instance.GetIndex(i));
         if(!ok){
+            inv.AddMoney(i.cost);
             speechBubble.text = "your inventory is full you stupid piece of shit";
         }
     }
-    public void sell(int slot,Transform product){
+    public void sell(int slot,Transform product, item i){
+        inv.AddMoney(i.resellValue);
         speechBubble.text = thx[Random.Range(0,thx.Length)];
         inv.RemoveFromSlots(slot);
         Destroy(product.gameObject);

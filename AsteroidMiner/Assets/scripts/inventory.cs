@@ -7,7 +7,8 @@ using TMPro;
 public class inventory : MonoBehaviour
 {
     public static inventory instance;
-    float money = 20f;
+    float money = 20000f;
+    public TextMeshProUGUI moneyDisplay;
     Vector2Int[] slots = new Vector2Int[25];
     Vector2Int[] tools = new Vector2Int[4];
     Vector2Int[] active = new Vector2Int[6];
@@ -22,6 +23,7 @@ public class inventory : MonoBehaviour
         for(int i = 0; i< tools.Length; i++){
             tools[i] = new Vector2Int(toolItems[i],toolCounts[i]);
         }
+        moneyDisplay.text = money.ToString() + "€";
         // ressourcesCount = res;
         // storage = 0;
         // for (int i = 0; i < res.Length; i++)
@@ -196,6 +198,7 @@ public class inventory : MonoBehaviour
         if(money + mon < 0)
             return false;
         money += mon;
+        moneyDisplay.text = money.ToString() + "€";
         return true;
     }
 }

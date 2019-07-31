@@ -22,8 +22,9 @@ public class collect : MonoBehaviour
     public void collectStuff(Transform t){
         ressource ressource = t.GetComponent<ressource>();
         if(ressource != null){
-            inventory.AddToSlots(ressource.item);
-            asteroidBelt.DeleteItem(t);
+            bool ok = inventory.AddToSlots(ressource.item);
+            if(ok)
+                asteroidBelt.DeleteItem(t);
             //Destroy(t.gameObject);
         }
     }

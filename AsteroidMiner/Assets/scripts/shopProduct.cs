@@ -27,7 +27,7 @@ public class shopProduct : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
             shop.buy(i,buy);
         }
         else{
-            shop.sell(slot,transform);
+            shop.sell(slot,transform,i);
         }
         
     }

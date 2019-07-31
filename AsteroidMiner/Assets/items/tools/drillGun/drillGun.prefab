@@ -6227,8 +6227,8 @@ MonoBehaviour:
     type: 3}
   position: {fileID: 1271979841094163736}
   damage: 10
-  force: 50
-  speed: 3
+  force: 30
+  speed: 4
   anim: {fileID: 6035979118014545114}
 --- !u!95 &6035979118014545114
 Animator:
