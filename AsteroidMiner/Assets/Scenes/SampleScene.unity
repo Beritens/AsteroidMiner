@@ -5761,6 +5761,11 @@ PrefabInstance:
       propertyPath: foregroundThumb
       value: 
       objectReference: {fileID: 894259714}
+    - target: {fileID: 1275180281510907494, guid: 47b3601bbfc49374bbebbab96c21e5b8,
+        type: 3}
+      propertyPath: orderInLayer1
+      value: 199
+      objectReference: {fileID: 0}
     - target: {fileID: 6743615340778288356, guid: 47b3601bbfc49374bbebbab96c21e5b8,
         type: 3}
       propertyPath: m_Material
@@ -5944,6 +5949,16 @@ PrefabInstance:
     - target: {fileID: 399426090, guid: 47b3601bbfc49374bbebbab96c21e5b8, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8918372941954286485, guid: 47b3601bbfc49374bbebbab96c21e5b8,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 8918372941612213434, guid: 47b3601bbfc49374bbebbab96c21e5b8,
+        type: 3}
+      propertyPath: m_Interpolate
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3038072846995718679, guid: 47b3601bbfc49374bbebbab96c21e5b8, type: 3}

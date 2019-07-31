@@ -117,8 +117,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 405253369861838534}
-  force: 20
   damage: 10
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!60 &7806958268162883230
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -164,7 +166,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0

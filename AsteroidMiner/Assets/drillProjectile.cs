@@ -6,6 +6,7 @@ public class drillProjectile : MonoBehaviour
 {
     public Rigidbody2D rb;
     public float damage;
+    public LayerMask layerMask;
     /// <summary>
     /// Sent when an incoming collider makes contact with this object's
     /// collider (2D physics only).
@@ -17,6 +18,7 @@ public class drillProjectile : MonoBehaviour
         if(astro != null){
             astro.damage(damage);
         }
-        Destroy(gameObject);
+        if(layerMask == (layerMask | (1 << other.gameObject.layer)))
+            Destroy(gameObject);
     }
 }

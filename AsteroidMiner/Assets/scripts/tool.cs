@@ -15,6 +15,7 @@ public class tool : MonoBehaviour
     protected float armLengthBackground;
     protected float forearmForeground;
     protected float forearmBackground;
+    
     public float toolLength;
     protected float R;
     protected float r;
@@ -35,7 +36,7 @@ public class tool : MonoBehaviour
     }
     public void changeSpriteOrder(int pos, bool oben){
         if(oben){
-            pos += sprites.Length-1;
+            pos -= sprites.Length-1;
         }
         for(int i = 0; i< sprites.Length;i++){
             sprites[i].sortingOrder = pos -i;
