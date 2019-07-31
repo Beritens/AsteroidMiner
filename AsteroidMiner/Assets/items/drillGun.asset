@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f05e652f46a36148ad1412590ad88fa, type: 3}
   m_Name: drillGun
   m_EditorClassIdentifier: 
-  name: superDrill
+  name: drillGun
   cost: 2000000
   resellValue: 1000000
-  sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  sprite: {fileID: 21300000, guid: fa990c00781c1b5418260926a27e763b, type: 3}
   prefab: {fileID: 8646609997345979247, guid: 6017c91c8b631b248b5c774b45d0ccf3, type: 3}
   stackable: 0
   type: 1

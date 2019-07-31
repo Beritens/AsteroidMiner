@@ -26,7 +26,8 @@ public class inventoryAccess : window
     void Start()
     {
         inv = inventory.instance;
-        SelectTool(true);
+        UpdateInventory();
+        //SelectTool(true);
     }
     void Update()
     {

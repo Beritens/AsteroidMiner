@@ -10,6 +10,7 @@ public class drillGun : tool
     public float force;
     public float speed;
     Rigidbody2D player;
+    public Animator anim;
     public override void star(){
         player = toolManager.GetComponent<Rigidbody2D>();
     }
@@ -59,5 +60,6 @@ public class drillGun : tool
         
         gun.rb.velocity += player.velocity;
         gun.rb.AddForce((Vector2)(g.transform.up*force),ForceMode2D.Impulse);
+        anim.Play("reload");
     }
 }

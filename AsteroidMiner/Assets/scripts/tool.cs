@@ -15,7 +15,7 @@ public class tool : MonoBehaviour
     protected float armLengthBackground;
     protected float forearmForeground;
     protected float forearmBackground;
-    
+
     public float toolLength;
     protected float R;
     protected float r;
@@ -65,10 +65,12 @@ public class tool : MonoBehaviour
         OnSwitchSide(toolManager.rightOri);
     }
     public Vector2 HandPos(Vector2 mousePos){
+        Debug.DrawRay(mousePos,Vector2.up);
         float d= Vector2.Distance(mousePos,shoulder.position);
         if(d> (R+r)){
             toolDir = (mousePos-(Vector2)shoulder.position).normalized;
             return mousePos;
+            
         }
         else if(d <Mathf.Abs(R-r)+0.05f){
             d = Mathf.Abs(R-r)+0.05f;
@@ -81,6 +83,7 @@ public class tool : MonoBehaviour
         Vector2 dir = ((Vector2)shoulder.position-mousePos).normalized;
         Vector2 elbow = mousePos+((dir*x)+(Vector2.Perpendicular(dir)*h* (toolManager.rightOri? 1:-1)));
         Vector2 elToHand = (mousePos-elbow).normalized;
+        
         toolDir = elToHand;
         return  elbow+elToHand* foreArmLength;
 
