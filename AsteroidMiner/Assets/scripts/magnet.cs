@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class magnet : MonoBehaviour
+public class magnet : active
 {
     public float strength;
     public float radius;

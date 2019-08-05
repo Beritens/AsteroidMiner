@@ -11,17 +11,20 @@ public class inventory : MonoBehaviour
     public TextMeshProUGUI moneyDisplay;
     Vector2Int[] slots = new Vector2Int[25];
     Vector2Int[] tools = new Vector2Int[4];
-    Vector2Int[] active = new Vector2Int[6];
+    Vector2Int[] active = new Vector2Int[5];
     void Awake()
     {
         instance = this;
     }
-    public void reload(int[] slotItems, int[] slotCounts, int[] toolItems, int[] toolCounts){
+    public void reload(int[] slotItems, int[] slotCounts, int[] toolItems, int[] toolCounts, int[] activeItems, int[] activeCounts){
         for(int i = 0; i< slots.Length; i++){
             slots[i] = new Vector2Int(slotItems[i],slotCounts[i]);
         }
         for(int i = 0; i< tools.Length; i++){
             tools[i] = new Vector2Int(toolItems[i],toolCounts[i]);
+        }
+        for(int i = 0; i< active.Length; i++){
+            active[i] = new Vector2Int(activeItems[i],activeCounts[i]);
         }
         moneyDisplay.text = money.ToString() + "€";
         // ressourcesCount = res;
@@ -183,6 +186,7 @@ public class inventory : MonoBehaviour
     public void RemoveFromTools(int slot){
         tools[slot] = Vector2Int.zero;
     }
+    
     public bool AddToActive(int item, int slot){
         if (active[slot].y ==0){
             active[slot].x = item;
@@ -190,6 +194,27 @@ public class inventory : MonoBehaviour
             return true;
         }
         return false;
+    }
+    public int AddToActiveAmount(int item, int number, int slot, out int reject){
+    if(active[slot].y == 100 || (active[slot].x != item &&active[slot].y >0) || (!items.instance.itemObjects[item].stackable &&active[slot].y >0) || (items.instance.itemObjects[item].type != 2)){
+        Debug.Log((active[slot].y == 100) + " "+ (active[slot].x != item &&active[slot].y >0)+ " " +(!items.instance.itemObjects[item].stackable &&active[slot].y >0) +" "+ (items.instance.itemObjects[item].type != 1));
+        reject = 0;
+        return number;
+    }
+    else if(100-active[slot].y>= number){
+        active[slot].x  = item;
+        active[slot].y += number;
+        reject = 0;
+        return 0;
+    }  
+    else{
+        //tools[slot].x  = item;
+        
+        int rest = active[slot].y+number-100;
+        active[slot].y  = 100;
+        reject = AddToSlotsAmount(item, rest, true);
+        return rest;
+    }
     }
     public void RemoveFromActive(int slot){
         active[slot] = Vector2Int.zero;

@@ -78,8 +78,8 @@ public class shop : window
             speechBubble.text = "your inventory is full you stupid piece of shit";
         }
     }
-    public void sell(int slot,Transform product, item i){
-        inv.AddMoney(i.resellValue);
+    public void sell(int slot,Transform product, item i, int count){
+        inv.AddMoney(i.resellValue*count);
         speechBubble.text = thx[Random.Range(0,thx.Length)];
         inv.RemoveFromSlots(slot);
         Destroy(product.gameObject);

@@ -27,7 +27,7 @@ public class shopProduct : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
             shop.buy(i,buy);
         }
         else{
-            shop.sell(slot,transform,i);
+            shop.sell(slot,transform,i,count);
         }
         
     }
@@ -45,13 +45,15 @@ public class shopProduct : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
         col.a = 0;
         im.color = col;
     }
+    int count;
 
     public void setVariables(item i, bool buy, int count){
+        
         if(count == 0){
             Destroy(gameObject);
             return;
         }
-
+        this.count = count;
         this.i= i;
         this.buy = buy;
         im = GetComponent<Image>();

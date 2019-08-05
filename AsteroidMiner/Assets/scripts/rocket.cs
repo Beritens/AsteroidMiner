@@ -25,6 +25,14 @@ public class rocket : selectable, IparentForPlayer
     Transform background;
     public ParticleSystem grind;
     bool justNow;
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
+    void Start()
+    {
+        StartStuff();
+    }
     public override void pressE(){
         if(Vector2.Distance(player.position,transform.position)>6f)
             return;
@@ -32,7 +40,7 @@ public class rocket : selectable, IparentForPlayer
 
     }
     void activate(){
-        StartSTuff();
+        StartStuff();
             
         active = true;
         justNow = true;
@@ -48,7 +56,7 @@ public class rocket : selectable, IparentForPlayer
     /// </summary>
     Vector2 right;
     Vector2 left;
-    void StartSTuff()
+    void StartStuff()
     {
         player = GameObject.FindObjectOfType<look>().transform;
         rb = GetComponent<Rigidbody2D>();

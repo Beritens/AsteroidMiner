@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class tool : MonoBehaviour
 {
     protected toolManager toolManager;
@@ -60,12 +61,11 @@ public class tool : MonoBehaviour
         armLengthForeground = Vector2.Distance(foregroundShoulder.position,foregroundElbow.position);
         armLengthBackground = Vector2.Distance(backgroundShoulder.position,backgroundElbow.position);
         //rigging rig = toolManager.GetComponentInChildren<rigging>();
-        forearmForeground = Vector2.Distance(ground.ikStuff[2].transform.position,foregroundElbow.position);
-        forearmBackground = Vector2.Distance(ground.ikStuff[3].transform.position,backgroundElbow.position);
+        forearmForeground = Vector2.Distance(toolManager.ikForegroundArm.position,foregroundElbow.position);
+        forearmBackground = Vector2.Distance(toolManager.ikBackgroundArm.position,backgroundElbow.position);
         OnSwitchSide(toolManager.rightOri);
     }
     public Vector2 HandPos(Vector2 mousePos){
-        Debug.DrawRay(mousePos,Vector2.up);
         float d= Vector2.Distance(mousePos,shoulder.position);
         if(d> (R+r)){
             toolDir = (mousePos-(Vector2)shoulder.position).normalized;

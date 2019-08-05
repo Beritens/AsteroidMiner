@@ -18,20 +18,21 @@ public class asteroid : MonoBehaviour
     {
         h= health;
     }
-    public void damage(float amount){
+    public bool damage(float amount){
         if(r == null)
             r = GetComponent<SpriteRenderer>();
         
         h-= amount;
         if(h <= 0){
             destroy();
-            return;
+            return true;
         }
         int index = Mathf.FloorToInt((stages.Length+1)-(h/health)*(stages.Length+1));
         if(index == 0){
-            return;
+            return false;
         }
         r.sprite = stages[index-1];
+        return false;
         
         
     }

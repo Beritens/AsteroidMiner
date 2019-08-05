@@ -14,7 +14,7 @@ public class savePlayer : MonoBehaviour
             parent = saveOtherStuff.transforms.IndexOf(player.transform.parent);
         }
         
-        SaveDataPlayer sDP = new SaveDataPlayer(inventory.GetSlots(),inventory.GetTools(),player.position,player.velocity,player.rotation,parent);
+        SaveDataPlayer sDP = new SaveDataPlayer(inventory.GetSlots(),inventory.GetTools(),inventory.GetActives(),player.position,player.velocity,player.rotation,parent);
         SaveSystem.SavePlayer(sDP,saveCom.saveName);
     }
     public void load(){
@@ -22,7 +22,7 @@ public class savePlayer : MonoBehaviour
         SaveDataPlayer sDP = SaveSystem.loadPlayer(saveCom.saveName);
         if(sDP == null)
             return;
-        inventory.reload(sDP.slotItems,sDP.slotCounts, sDP.toolItems,sDP.toolCounts);
+        inventory.reload(sDP.slotItems,sDP.slotCounts, sDP.toolItems,sDP.toolCounts,sDP.activeItems,sDP.activeCounts);
         player.GetComponent<reloadPlayer>().reload(sDP,saveOtherStuff.transforms);
         
         
@@ -30,7 +30,7 @@ public class savePlayer : MonoBehaviour
 }
 [System.Serializable]
 public class SaveDataPlayer{
-    public SaveDataPlayer(Vector2Int[] slots,Vector2Int[] tools ,Vector2 position, Vector2 velocity, float rotation, int parent){
+    public SaveDataPlayer(Vector2Int[] slots,Vector2Int[] tools ,Vector2Int[] active,Vector2 position, Vector2 velocity, float rotation, int parent){
         slotItems = new int[slots.Length];
         slotCounts = new int[slots.Length];
         for(int i = 0; i<slots.Length;i++){
@@ -43,6 +43,12 @@ public class SaveDataPlayer{
             toolItems[i] = tools[i].x;
             toolCounts[i] = tools[i].y;
         }
+        activeItems = new int[active.Length];
+        activeCounts = new int[active.Length];
+        for(int i = 0; i<tools.Length;i++){
+            activeItems[i] = active[i].x;
+            activeCounts[i] = active[i].y;
+        }
         this.position = new float[2]{position.x,position.y};
         this.velocity = new float[2]{velocity.x,velocity.y};
         this.rotaion = rotation;
@@ -53,6 +59,8 @@ public class SaveDataPlayer{
 
     public int[] toolItems;
     public int[] toolCounts;
+    public int[] activeItems;
+    public int[] activeCounts;
     //public Vector2Int actives;
     public float[] position;
     public float[] velocity;

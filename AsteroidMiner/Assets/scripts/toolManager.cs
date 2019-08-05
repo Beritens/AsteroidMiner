@@ -14,6 +14,8 @@ public class toolManager : MonoBehaviour
     public SpriteRenderer BackgroundArm;
     public Sprite foregroundArmHolding;
     public Sprite backgroundArmHolding;
+    public Transform ikBackgroundArm;
+    public Transform ikForegroundArm;
     public SpriteRenderer backgroundPalm;
     public SpriteRenderer foregroundThumb;
 

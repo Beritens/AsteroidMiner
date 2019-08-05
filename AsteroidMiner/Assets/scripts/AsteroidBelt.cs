@@ -54,7 +54,6 @@ public class AsteroidBelt : MonoBehaviour
             sectorsToSave.Add(new Vector2Int(objs.key[0],objs.key[1]));
         }
         foreach(saveTransform it in data.items){
-            Debug.Log(items);
             Transform drop = items.DropItem(it.item,new Vector2(it.position[0],it.position[1]));
             drop.localScale = new Vector3(it.scale[0],it.scale[1],1);
             drop.eulerAngles = new Vector3(0,0,it.rotation);

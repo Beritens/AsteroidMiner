@@ -114,7 +114,21 @@ public class ground : MonoBehaviour
             //rb.rotation  = Mathf.Atan2(hit.normal.x,hit.normal.y)*Mathf.Rad2Deg;
             
         }
+        else{
+            superGrounded = false;
+        }
+        if(touchingGround && !grounded){
+            float playerAngle =  Vector2.SignedAngle(touchnormal,transform.up);
+            bool right = (playerAngle <0);
+            Vector2 inputAxis = Camera.main.transform.TransformDirection(new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical")));
+            float inputAngle = Vector2.SignedAngle(touchnormal,inputAxis);
+            if((right && inputAngle >20 && inputAngle <160)||(!right&& inputAngle<-20 && inputAngle >-160)){
+                rb.AddTorque(torque*(right?1:-1));
+            }
+            
+        }
     }
+    public float torque = 10000f;
     RaycastHit2D GetGround(){
         RaycastHit2D[] hits =  Physics2D.RaycastAll(transform.position,-transform.up,grounded? rayLengthOnGround:rayLength,lm);
         foreach(RaycastHit2D h in hits){
@@ -125,4 +139,18 @@ public class ground : MonoBehaviour
         return new RaycastHit2D();
     }
     float superGroundedCkeck;
+    bool touchingGround;
+    Vector2 touchnormal;
+    void OnCollisionStay2D(Collision2D other)
+    {
+        if(other.gameObject.tag == "ground"){
+            touchingGround = true;
+            touchnormal = other.contacts[0].normal;
+        }
+            
+    }
+    void OnCollisionExit2D(Collision2D other)
+    {
+        touchingGround = false;
+    }
 }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f05e652f46a36148ad1412590ad88fa, type: 3}
+  m_Name: jetpack
+  m_EditorClassIdentifier: 
+  name: jetpack
+  cost: 1000
+  resellValue: 100
+  sprite: {fileID: 21300000, guid: a029173c2603bd144be58b694dc40dc3, type: 3}
+  prefab: {fileID: 4371778645798626642, guid: a5c8041ea8cd88645b858ef30f281a9f, type: 3}
+  stackable: 0
+  type: 2
