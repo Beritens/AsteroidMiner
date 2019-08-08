@@ -15,6 +15,7 @@ public class move : MonoBehaviour
     public float jumpForce;
     public look look;
     public float groundDamp= 0.9f;
+    public AudioSource stepSounds;
 
     [Header("jets")]
     public Light2D[] jetLights;
@@ -70,6 +71,7 @@ public class move : MonoBehaviour
         if(!ground.grounded){
             if(g){
                 anim.enabled = false;
+                stepSounds.Stop();
                 rb.angularDrag = 0f;
             }
             g= false;
@@ -116,6 +118,8 @@ public class move : MonoBehaviour
         }
         else{
             if(!g){
+                stepSounds.Play();
+                stepSounds.Pause();
                 anim.enabled = true;
                 g= true;
                 right[0]= false;
@@ -154,14 +158,18 @@ public class move : MonoBehaviour
             anim.SetFloat("speed",horizontalVel*(look.right?1:-1));
             if(Mathf.Abs(horizontalVel)>0.005f || x != 0){
                 anim.SetBool("walk",true);
+                stepSounds.UnPause();
+                float sp = Mathf.Abs(horizontalVel);
 
             }
             else{
                 anim.SetBool("walk",false);
+                stepSounds.Pause();
             }
         }
         else{
             anim.enabled = false;
+            stepSounds.Pause();
         }
     }
     public void BoostUp(float power){

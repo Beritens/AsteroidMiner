@@ -6,12 +6,16 @@ public class ActiveManager : MonoBehaviour
 {
     public Transform container;
     items items;
-    void Start()
+    /// <summary>
+    /// Awake is called when the script instance is being loaded.
+    /// </summary>
+    void Awake()
     {
         items = items.instance;
     }
 
     public void AddActive(int item, int slot, int count){
+        
         Transform slotT = container.GetChild(slot);
         if(slotT.childCount > 0){
             foreach (Transform child in slotT)

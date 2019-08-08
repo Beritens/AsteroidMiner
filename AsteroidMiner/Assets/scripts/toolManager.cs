@@ -41,13 +41,6 @@ public class toolManager : MonoBehaviour
         look.OnSwitchSide += OnSwitchSide;
         foregroundArm = ForegroundArm.sprite;
         backgroundArm = BackgroundArm.sprite;
-    }
-    /// <summary>
-    /// Start is called on the frame when a script is enabled just before
-    /// any of the Update methods is called the first time.
-    /// </summary>
-    void Start()
-    {
         items = items.instance;
     }
     public void OnSwitchSide(bool rightori){
@@ -65,8 +58,15 @@ public class toolManager : MonoBehaviour
             currentToolTool.OnSwitchSide(rightori);
         }
     }
-    
+    int toSel = -1;
     public void selectTool(int item){
+        if(!gameObject.activeSelf){
+            toSel = item;
+            return;
+        }
+        else{
+            toSel = -1;
+        }
         currentTool = GameObject.Instantiate(items.itemObjects[item].prefab,transform.position,Quaternion.identity);
         currentToolTool = currentTool.GetComponent<tool>();
         
@@ -114,5 +114,14 @@ public class toolManager : MonoBehaviour
         currentToolTool.changeSpriteOrder(orderInLayer1,true);
 
         
+    }
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void Update()
+    {
+        if(toSel!= -1){
+            selectTool(toSel);
+        }
     }
 }

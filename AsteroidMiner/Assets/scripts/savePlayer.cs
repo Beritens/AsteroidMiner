@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class savePlayer : MonoBehaviour
 {
+    public theBeginning tB;
     public Rigidbody2D player;
     public inventory inventory;
     public save saveCom;
@@ -14,23 +15,27 @@ public class savePlayer : MonoBehaviour
             parent = saveOtherStuff.transforms.IndexOf(player.transform.parent);
         }
         
-        SaveDataPlayer sDP = new SaveDataPlayer(inventory.GetSlots(),inventory.GetTools(),inventory.GetActives(),player.position,player.velocity,player.rotation,parent);
+        SaveDataPlayer sDP = new SaveDataPlayer(inventory.GetSlots(),inventory.GetTools(),inventory.GetActives(),player.position,player.velocity,player.rotation,parent, inventory.money);
         SaveSystem.SavePlayer(sDP,saveCom.saveName);
     }
     public void load(){
         
         SaveDataPlayer sDP = SaveSystem.loadPlayer(saveCom.saveName);
-        if(sDP == null)
-            return;
-        inventory.reload(sDP.slotItems,sDP.slotCounts, sDP.toolItems,sDP.toolCounts,sDP.activeItems,sDP.activeCounts);
-        player.GetComponent<reloadPlayer>().reload(sDP,saveOtherStuff.transforms);
+        if(sDP != null){
+            inventory.reload(sDP.slotItems,sDP.slotCounts, sDP.toolItems,sDP.toolCounts,sDP.activeItems,sDP.activeCounts,sDP.money);
+            player.GetComponent<reloadPlayer>().reload(sDP,saveOtherStuff.transforms);
+        }
+        else{
+            tB.start();
+        }
+        
         
         
     }
 }
 [System.Serializable]
 public class SaveDataPlayer{
-    public SaveDataPlayer(Vector2Int[] slots,Vector2Int[] tools ,Vector2Int[] active,Vector2 position, Vector2 velocity, float rotation, int parent){
+    public SaveDataPlayer(Vector2Int[] slots,Vector2Int[] tools ,Vector2Int[] active,Vector2 position, Vector2 velocity, float rotation, int parent, float money){
         slotItems = new int[slots.Length];
         slotCounts = new int[slots.Length];
         for(int i = 0; i<slots.Length;i++){
@@ -52,6 +57,7 @@ public class SaveDataPlayer{
         this.position = new float[2]{position.x,position.y};
         this.velocity = new float[2]{velocity.x,velocity.y};
         this.rotaion = rotation;
+        this.money = money;
         this.parent = parent;
     }
     public int[] slotItems;
@@ -65,5 +71,6 @@ public class SaveDataPlayer{
     public float[] position;
     public float[] velocity;
     public float rotaion;
+    public float money;
     public int parent;
 }

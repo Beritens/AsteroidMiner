@@ -7,7 +7,7 @@ using TMPro;
 public class inventory : MonoBehaviour
 {
     public static inventory instance;
-    float money = 20000f;
+    public float money = 20000f;
     public TextMeshProUGUI moneyDisplay;
     Vector2Int[] slots = new Vector2Int[25];
     Vector2Int[] tools = new Vector2Int[4];
@@ -16,7 +16,15 @@ public class inventory : MonoBehaviour
     {
         instance = this;
     }
-    public void reload(int[] slotItems, int[] slotCounts, int[] toolItems, int[] toolCounts, int[] activeItems, int[] activeCounts){
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
+    void Start()
+    {
+        moneyDisplay.text = money.ToString() + "€";
+    }
+    public void reload(int[] slotItems, int[] slotCounts, int[] toolItems, int[] toolCounts, int[] activeItems, int[] activeCounts, float money){
         for(int i = 0; i< slots.Length; i++){
             slots[i] = new Vector2Int(slotItems[i],slotCounts[i]);
         }
@@ -26,6 +34,7 @@ public class inventory : MonoBehaviour
         for(int i = 0; i< active.Length; i++){
             active[i] = new Vector2Int(activeItems[i],activeCounts[i]);
         }
+        this.money = money;
         moneyDisplay.text = money.ToString() + "€";
         // ressourcesCount = res;
         // storage = 0;

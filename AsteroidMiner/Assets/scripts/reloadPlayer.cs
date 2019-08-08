@@ -13,7 +13,7 @@ public class reloadPlayer : MonoBehaviour
         transform.position = pos;
         transform.eulerAngles = new Vector3(0,0,sDP.rotaion);
         player.velocity = vel;
-        Camera.main.transform.position = pos;
+        Camera.main.transform.parent.position = pos;
         foreach(Transform t in limbs){
             returnToPos rTP= t.GetComponent<returnToPos>();
             Rigidbody2D rb = t.GetComponent<Rigidbody2D>();

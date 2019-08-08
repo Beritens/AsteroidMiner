@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: drillGun
   m_EditorClassIdentifier: 
   name: drillGun
-  cost: 2000000
-  resellValue: 1000000
+  cost: 20000
+  resellValue: 10000
   sprite: {fileID: 21300000, guid: fa990c00781c1b5418260926a27e763b, type: 3}
   prefab: {fileID: 8646609997345979247, guid: 6017c91c8b631b248b5c774b45d0ccf3, type: 3}
   stackable: 0

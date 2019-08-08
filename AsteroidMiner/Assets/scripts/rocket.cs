@@ -36,6 +36,7 @@ public class rocket : selectable, IparentForPlayer
     public override void pressE(){
         if(Vector2.Distance(player.position,transform.position)>6f)
             return;
+        justNow = true;
         activate();
 
     }
@@ -43,7 +44,6 @@ public class rocket : selectable, IparentForPlayer
         StartStuff();
             
         active = true;
-        justNow = true;
         player.parent = transform;
         player.localPosition = Vector2.zero;
         player.gameObject.SetActive(false);
@@ -58,6 +58,8 @@ public class rocket : selectable, IparentForPlayer
     Vector2 left;
     void StartStuff()
     {
+        if(active)
+            return;
         player = GameObject.FindObjectOfType<look>().transform;
         rb = GetComponent<Rigidbody2D>();
         rb.centerOfMass = cOM;
@@ -94,7 +96,6 @@ public class rocket : selectable, IparentForPlayer
                         }
                     }
                 }
-                Debug.Log(exitDir);
                 player.gameObject.SetActive(true);
                 player.parent = null;
                 player.position = (Vector2)transform.position +(Vector2)transform.up+(exitDir* exit);
@@ -191,6 +192,7 @@ public class rocket : selectable, IparentForPlayer
 
     public void activateIt()
     {
+        justNow = false;
         activate();
     }
 }

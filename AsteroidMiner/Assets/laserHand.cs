@@ -13,6 +13,10 @@ public class laserHand : tool
     public LayerMask layerMask;
     public GameObject explosion;
     public float damagePerSecond = 100f;
+    cameraShake shake;
+    public override void star(){
+        shake = cameraShake.instance;
+    }
     public override void OnSwitchSide(bool rightori){
         foreground.SetActive(rightori);
         background.SetActive(!rightori);
@@ -61,6 +65,8 @@ public class laserHand : tool
                     if(boom){
 
                         GameObject.Instantiate(explosion,pos,Quaternion.Euler(0,0,Random.Range(0,360)));
+                        float shaky = Mathf.Clamp(-hit.distance*0.1f+1,0.1f,1f)*0.7f;
+                        shake.Shake(0.2f,shaky);
                     }
                 }
             }

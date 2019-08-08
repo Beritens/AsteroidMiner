@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: laser pickaxe
   m_EditorClassIdentifier: 
   name: laser pickaxe
-  cost: 500
-  resellValue: 100
+  cost: 2000
+  resellValue: 1000
   sprite: {fileID: 21300000, guid: 0e38c7f495add354b8d99ad040ebf1a2, type: 3}
   prefab: {fileID: 1712721333915999806, guid: ef1da0106b549e44ba6b9c6b7c687308, type: 3}
-  toolType: 0
   stackable: 0
   type: 1

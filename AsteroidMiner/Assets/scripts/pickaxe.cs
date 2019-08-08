@@ -9,6 +9,8 @@ public class pickaxe : tool
     public float strenth =10f;
     Vector2 localShoulderPos;
     ParticleSystem pickaxeHit;
+    public AudioSource swing;
+    public AudioSource hit;
 
     // Start is called before the first frame update
     void Start()
@@ -115,6 +117,9 @@ public class pickaxe : tool
         if(dist<= reach){
             asteroid ast = obj.GetComponent<asteroid>();
             if(ast != null){
+                if(hit!= null){
+                    hit.Play();
+                }
                 pickaxeHit.transform.position = cam.ScreenToWorldPoint(Input.mousePosition);
                 pickaxeHit.Play();
                 ast.damage(strenth);
@@ -128,12 +133,15 @@ public class pickaxe : tool
     float swingDur = 0.1f;
     bool animatePickIsRunning = false;
     IEnumerator animatePick(){
+        if(swing != null){
+            swing.Play();
+        }
         animatePickIsRunning = true;
         toolManager.focus.GetComponent<returnToPos>().enabled = false;
         toolManager.focus.GetComponent<DistanceJoint2D>().enabled = false;
         lockIk(toolManager.rightOri? 2:3, true);
         float animtime = 0;
-            
+        
         while(animtime <= raiseDuration){
             animtime += Time.deltaTime;
             Vector2 direction = ((Vector2)toolManager.transform.InverseTransformPoint(GetWantedHandPos())-localShoulderPos);

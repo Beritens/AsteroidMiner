@@ -20,6 +20,8 @@ public class drill : tool
     float currentExtend = 0;
     float targetExtend = 0;
     Vector2 oldPosition;
+    public AudioSource normalSound;
+    public AudioSource hitSound;
     public override void star(){
         defaultExtend = head.localPosition.x;
         headcol = head.GetComponent<Collider2D>();
@@ -73,6 +75,7 @@ public class drill : tool
         
        //rbHead.MovePosition(rbHead.position+(Vector2.right*0.1f));
         if(Input.GetButton("Fire1")){
+            normalSound.UnPause();
             toolManager.focus.position = GetCorrectedHandPos(handpos);
             drilling = true;
             drillHead.SetFloat("speed",drillSpeed);
@@ -80,6 +83,7 @@ public class drill : tool
             //head.localPosition = Vector2.right*(defaultExtend+targetExtend);
         }
         else{
+            normalSound.Pause();
             toolManager.focus.position = handpos;
             drilling = false;
             targetExtend = 0;
@@ -126,6 +130,7 @@ public class drill : tool
         if(touching&& drilling){
             foreach(ParticleSystem pS in particles){
                 pS.Play();
+                hitSound.UnPause();
             }
             
             foreach (Collider2D col in asteroids)
@@ -140,6 +145,7 @@ public class drill : tool
             }
         }
         else{
+            hitSound.Pause();
             foreach(ParticleSystem pS in particles){
                 pS.Stop();
             }
